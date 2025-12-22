@@ -71,6 +71,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', function () {
         return redirect()->route('dashboard');
     });
+
+    // Account Settings Routes (for all authenticated users)
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/settings', [\App\Http\Controllers\AccountSettingsController::class, 'index'])->name('settings');
+        Route::put('/profile', [\App\Http\Controllers\AccountSettingsController::class, 'updateProfile'])->name('update-profile');
+        Route::put('/avatar', [\App\Http\Controllers\AccountSettingsController::class, 'updateAvatar'])->name('update-avatar');
+        Route::delete('/avatar', [\App\Http\Controllers\AccountSettingsController::class, 'removeAvatar'])->name('remove-avatar');
+        Route::put('/password', [\App\Http\Controllers\AccountSettingsController::class, 'updatePassword'])->name('update-password');
+    });
 });
 
 /*
@@ -123,6 +132,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 */
 
 Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher.')->group(function () {
+    // Dashboard
+    Route::get('/', [\App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
+
+    // Students Management
+    Route::get('students', [\App\Http\Controllers\Teacher\StudentController::class, 'index'])->name('students.index');
+
+    // Reports
+    Route::get('reports', [\App\Http\Controllers\Teacher\ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/classroom/{classroom}', [\App\Http\Controllers\Teacher\ReportController::class, 'classroom'])->name('reports.classroom');
+    Route::get('reports/export/{classroom}', [\App\Http\Controllers\Teacher\ReportController::class, 'export'])->name('reports.export');
+
     // Classrooms
     Route::get('classrooms', [TeacherClassroomController::class, 'index'])->name('classrooms.index');
     Route::get('classrooms/create', [TeacherClassroomController::class, 'create'])->name('classrooms.create');
@@ -172,13 +192,19 @@ Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher
 */
 
 Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->group(function () {
+    // Dashboard
+    Route::get('/', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+
     // Classrooms
     Route::get('classrooms', [StudentClassroomController::class, 'index'])->name('classrooms.index');
     Route::post('classrooms/join', [StudentClassroomController::class, 'join'])->name('classrooms.join');
     Route::get('classrooms/{classroom}', [StudentClassroomController::class, 'show'])->name('classrooms.show');
     Route::post('classrooms/{classroom}/leave', [StudentClassroomController::class, 'leave'])->name('classrooms.leave');
 
-    // Assignments
+    // All Assignments (across all classrooms)
+    Route::get('assignments', [\App\Http\Controllers\Student\AssignmentController::class, 'index'])->name('assignments.index');
+
+    // Assignments (within classroom)
     Route::get('classrooms/{classroom}/assignments/{assignment}', [StudentAssignmentController::class, 'show'])->name('assignments.show');
     Route::post('classrooms/{classroom}/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submit'])->name('assignments.submit');
     Route::get('classrooms/{classroom}/assignments/{assignment}/result', [StudentAssignmentController::class, 'result'])->name('assignments.result');

@@ -1,4 +1,4 @@
-@extends('layouts.lms')
+@extends('layouts.teacher')
 
 @section('title', 'Buat Kelas Baru')
 

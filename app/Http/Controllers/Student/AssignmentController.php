@@ -12,6 +12,43 @@ use Illuminate\Support\Facades\Storage;
 class AssignmentController extends Controller
 {
     /**
+     * List all assignments across all enrolled classrooms.
+     */
+    public function index()
+    {
+        $user = auth()->user();
+        $classrooms = $user->enrolledClassrooms()->pluck('classrooms.id');
+
+        $assignments = Assignment::whereIn('classroom_id', $classrooms)
+            ->where('is_published', true)
+            ->with([
+                'classroom',
+                'submissions' => function ($query) use ($user) {
+                    $query->where('student_id', $user->id);
+                }
+            ])
+            ->orderBy('due_date')
+            ->get();
+
+        // Group by status
+        $pending = $assignments->filter(function ($assignment) {
+            return $assignment->submissions->isEmpty();
+        });
+
+        $submitted = $assignments->filter(function ($assignment) {
+            return $assignment->submissions->isNotEmpty() &&
+                $assignment->submissions->first()->status !== 'graded';
+        });
+
+        $graded = $assignments->filter(function ($assignment) {
+            return $assignment->submissions->isNotEmpty() &&
+                $assignment->submissions->first()->status === 'graded';
+        });
+
+        return view('student.assignments.index', compact('assignments', 'pending', 'submitted', 'graded'));
+    }
+
+    /**
      * Display the assignment.
      */
     public function show(Classroom $classroom, Assignment $assignment)

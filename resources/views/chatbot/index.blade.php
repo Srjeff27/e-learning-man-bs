@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="themeManager()" :class="darkMode ? 'dark' : ''">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="chatbotThemeManager()">
 
 <head>
     <meta charset="utf-8">
@@ -147,10 +147,10 @@
         }
     </style>
     <script>
-        function themeManager() {
+        function chatbotThemeManager() {
             return {
-                darkMode: localStorage.getItem('darkMode') === 'true' ||
-                    (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('darkMode')),
+                darkMode: localStorage.getItem('theme') === 'dark' ||
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme')),
 
                 init() {
                     // Apply theme immediately on init
@@ -162,7 +162,8 @@
 
                     // Watch for system preference changes
                     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                        if (!localStorage.getItem('darkMode')) {
+                        if (!localStorage.getItem('theme')) {
+                            this.darkMode = e.matches;
                             if (e.matches) document.documentElement.classList.add('dark');
                             else document.documentElement.classList.remove('dark');
                         }
@@ -171,7 +172,7 @@
 
                 toggleTheme() {
                     this.darkMode = !this.darkMode;
-                    localStorage.setItem('darkMode', this.darkMode);
+                    localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
 
                     if (this.darkMode) {
                         document.documentElement.classList.add('dark');
@@ -306,7 +307,7 @@
     </script>
 </head>
 
-<body class="min-h-screen gradient-bg transition-colors duration-300" x-data="themeManager()">
+<body class="min-h-screen gradient-bg transition-colors duration-300">
     <div class="min-h-screen flex flex-col fade-in" x-data="chatApp()">
         <!-- Header -->
         <header class="glass-effect sticky top-0 z-50">
