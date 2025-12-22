@@ -35,20 +35,48 @@
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Kategori</label>
-                        <select name="category"
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tahun
+                            Ajaran</label>
+                        <select name="academic_year"
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                            <option value="">Pilih Kategori</option>
-                            <option value="Akademik" {{ $event->category == 'Akademik' ? 'selected' : '' }}>Akademik</option>
-                            <option value="Ekstrakurikuler" {{ $event->category == 'Ekstrakurikuler' ? 'selected' : '' }}>
-                                Ekstrakurikuler</option>
-                            <option value="Libur" {{ $event->category == 'Libur' ? 'selected' : '' }}>Libur</option>
-                            <option value="Ujian" {{ $event->category == 'Ujian' ? 'selected' : '' }}>Ujian</option>
-                            <option value="Kegiatan" {{ $event->category == 'Kegiatan' ? 'selected' : '' }}>Kegiatan</option>
+                            <option value="2025/2026" {{ $event->academic_year == '2025/2026' ? 'selected' : '' }}>2025/2026
+                            </option>
+                            <option value="2026/2027" {{ $event->academic_year == '2026/2027' ? 'selected' : '' }}>2026/2027
+                            </option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Warna</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Semester</label>
+                        <select name="semester"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="ganjil" {{ $event->semester == 'ganjil' ? 'selected' : '' }}>Ganjil (Juli -
+                                Desember)</option>
+                            <option value="genap" {{ $event->semester == 'genap' ? 'selected' : '' }}>Genap (Januari - Juni)
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Jenis Event</label>
+                        <select name="event_type"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="primary" {{ $event->event_type == 'primary' ? 'selected' : '' }}>Kegiatan Sekolah
+                                (Biru)</option>
+                            <option value="warning" {{ $event->event_type == 'warning' ? 'selected' : '' }}>Ujian / Penilaian
+                                (Kuning)</option>
+                            <option value="success" {{ $event->event_type == 'success' ? 'selected' : '' }}>Libur / Hari Besar
+                                (Hijau)</option>
+                            <option value="info" {{ $event->event_type == 'info' ? 'selected' : '' }}>Hari Nasional (Cyan)
+                            </option>
+                            <option value="danger" {{ $event->event_type == 'danger' ? 'selected' : '' }}>Hari Kemerdekaan
+                                (Merah)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Warna
+                            (Custom)</label>
                         <input type="color" name="color" value="{{ old('color', $event->color) }}"
                             class="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
                     </div>

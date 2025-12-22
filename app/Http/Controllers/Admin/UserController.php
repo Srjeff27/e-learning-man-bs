@@ -7,6 +7,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -57,11 +58,17 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa,ortu',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
+            'avatar' => 'nullable|image|max:1024',
             'is_active' => 'boolean',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
         $validated['is_active'] = $request->boolean('is_active', true);
+
+        // Handle photo upload
+        if ($request->hasFile('avatar')) {
+            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
 
         $user = User::create($validated);
 
@@ -70,6 +77,7 @@ class UserController extends Controller
             Teacher::create([
                 'user_id' => $user->id,
                 'full_name' => $user->name,
+                'photo' => $validated['avatar'] ?? null,
             ]);
         }
 
@@ -97,6 +105,7 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa,ortu',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
+            'avatar' => 'nullable|image|max:1024',
             'is_active' => 'boolean',
         ]);
 
@@ -108,7 +117,21 @@ class UserController extends Controller
 
         $validated['is_active'] = $request->boolean('is_active', true);
 
+        // Handle photo upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
         $user->update($validated);
+
+        // Update teacher profile photo if exists
+        if ($user->teacher && isset($validated['avatar'])) {
+            $user->teacher->update(['photo' => $validated['avatar']]);
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil diperbarui.');
@@ -121,6 +144,11 @@ class UserController extends Controller
     {
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+        }
+
+        // Delete avatar if exists
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
         }
 
         $user->delete();

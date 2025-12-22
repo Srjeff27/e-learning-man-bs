@@ -46,9 +46,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Alamat</h3>
                     <p class="text-slate-600 dark:text-slate-400">
-                        Jl. Pendidikan No. 123<br>
-                        Kecamatan Kaur Utara<br>
-                        Kabupaten Kaur, Bengkulu 38853
+                        Tanjung Kemuning III<br>
+                        Kec. Tanjung Kemuning, Kab. Kaur<br>
+                        Bengkulu 38955, Indonesia
                     </p>
                 </div>
 
@@ -136,23 +136,25 @@
 
                 <div>
                     <h2 class="text-3xl font-extrabold gradient-text mb-6">Lokasi Kami</h2>
-                    <div class="glass-card overflow-hidden h-[400px] lg:h-[500px]">
+                    <div class="glass-card overflow-hidden h-[400px] lg:h-[500px] relative group">
+                        <iframe
+                            src="https://maps.google.com/maps?width=600&height=400&hl=en&q=SMAN%2002%20KAUR&t=k&z=19&ie=UTF8&iwloc=B&output=embed"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            class="absolute inset-0 w-full h-full grayscale hover:grayscale-0 transition-all duration-500">
+                        </iframe>
+
+                        {{-- Overlay Info --}}
                         <div
-                            class="w-full h-full bg-gradient-to-br from-blue-500/10 to-cyan-500/10 flex items-center justify-center">
-                            <div class="text-center p-8">
-                                <div
-                                    class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg">
-                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">SMAN 2 KAUR</h3>
-                                <p class="text-slate-600 dark:text-slate-400 mb-6">Jl. Pendidikan No. 123, Kaur</p>
-                                <a href="https://maps.google.com" target="_blank" class="btn btn-secondary">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white/90 via-white/80 to-transparent dark:from-slate-900/90 dark:via-slate-900/80 pointer-events-none group-hover:opacity-0 transition-opacity duration-300">
+                            <div
+                                class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-white/20">
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1">SMAN 2 KAUR</h3>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-3">Tanjung Kemuning III, Tanjung
+                                    Kemuning, Kaur Regency, Bengkulu 38955, Indonesia</p>
+                                <a href="https://maps.app.goo.gl/eRTQ9e8JvSoMQZJw7" target="_blank"
+                                    class="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 pointer-events-auto hover:underline">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>

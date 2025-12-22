@@ -196,9 +196,9 @@
                         </svg>
                         <div>
                             <p class="text-slate-400 leading-relaxed">
-                                Jl. Pendidikan No. 123<br>
-                                Kec. Kaur Utara, Kab. Kaur<br>
-                                Bengkulu 38853
+                                Tanjung Kemuning III<br>
+                                Kec. Tanjung Kemuning, Kab. Kaur<br>
+                                Bengkulu 38955, Indonesia
                             </p>
                         </div>
                     </div>

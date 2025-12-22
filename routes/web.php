@@ -24,7 +24,9 @@ Route::get('/visi-misi', [HomeController::class, 'visiMisi'])->name('visi-misi')
 Route::get('/struktur-organisasi', [HomeController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
 Route::get('/guru-staff', [HomeController::class, 'guruStaff'])->name('guru-staff');
 Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
+Route::get('/berita/{slug}', [HomeController::class, 'beritaShow'])->name('berita.show');
 Route::get('/galeri', [HomeController::class, 'galeri'])->name('galeri');
+Route::get('/kalender/download', [HomeController::class, 'downloadCalendar'])->name('kalender.download');
 Route::get('/kalender', [HomeController::class, 'kalender'])->name('kalender');
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [HomeController::class, 'kontakSubmit'])->name('kontak.submit');
@@ -108,6 +110,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('contacts.show');
     Route::patch('contacts/{contact}/read', [\App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])->name('contacts.mark-read');
     Route::delete('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy');
+
+    // Teachers Management
+    Route::resource('teachers', \App\Http\Controllers\Admin\TeacherController::class)->except(['show']);
+    Route::patch('teachers/{teacher}/toggle-active', [\App\Http\Controllers\Admin\TeacherController::class, 'toggleActive'])->name('teachers.toggle-active');
 });
 
 /*

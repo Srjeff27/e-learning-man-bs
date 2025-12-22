@@ -32,19 +32,39 @@
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Kategori</label>
-                        <select name="category"
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tahun
+                            Ajaran</label>
+                        <select name="academic_year"
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                            <option value="">Pilih Kategori</option>
-                            <option value="Akademik">Akademik</option>
-                            <option value="Ekstrakurikuler">Ekstrakurikuler</option>
-                            <option value="Libur">Libur</option>
-                            <option value="Ujian">Ujian</option>
-                            <option value="Kegiatan">Kegiatan</option>
+                            <option value="2025/2026">2025/2026</option>
+                            <option value="2026/2027">2026/2027</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Warna</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Semester</label>
+                        <select name="semester"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="ganjil">Ganjil (Juli - Desember)</option>
+                            <option value="genap">Genap (Januari - Juni)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Jenis Event</label>
+                        <select name="event_type"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            <option value="primary">Kegiatan Sekolah (Biru)</option>
+                            <option value="warning">Ujian / Penilaian (Kuning)</option>
+                            <option value="success">Libur / Hari Besar (Hijau)</option>
+                            <option value="info">Hari Nasional (Cyan)</option>
+                            <option value="danger">Hari Kemerdekaan (Merah)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Warna
+                            (Custom)</label>
                         <input type="color" name="color" value="{{ old('color', '#3b82f6') }}"
                             class="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
                     </div>

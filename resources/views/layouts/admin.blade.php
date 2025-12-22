@@ -11,7 +11,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        (function    () {
+        (function () {
             const darkMode = localStorage.getItem('darkMode');
             if (darkMode === 'true' || (darkMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -151,17 +151,17 @@
                     <span class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Pengguna</span>
                 </div>
 
-                <a href="{{ route('admin.users.index') }}?role=guru"
-                    class="nav-item flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 {{ request()->routeIs('admin.users.*') && request('role') === 'guru' ? 'active text-white' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                <a href="{{ route('admin.teachers.index') }}"
+                    class="nav-item flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 {{ request()->routeIs('admin.teachers.*') ? 'active text-white' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
                     <div
                         class="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center mr-3">
-                        <svg class="w-5 h-5 {{ request()->routeIs('admin.users.*') && request('role') === 'guru' ? 'text-emerald-400' : 'text-slate-400' }}"
+                        <svg class="w-5 h-5 {{ request()->routeIs('admin.teachers.*') ? 'text-emerald-400' : 'text-slate-400' }}"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
-                    <span class="font-medium">Kelola Guru</span>
+                    <span class="font-medium">Kelola Guru & Staff</span>
                 </a>
 
                 <a href="{{ route('admin.users.index') }}?role=siswa"

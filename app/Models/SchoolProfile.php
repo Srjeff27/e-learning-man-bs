@@ -26,6 +26,7 @@ class SchoolProfile extends Model
         'mission',
         'missions',
         'values',
+        'organization_structure',
         'motto',
         'logo',
         'favicon',
@@ -43,6 +44,7 @@ class SchoolProfile extends Model
             'facilities' => 'array',
             'missions' => 'array',
             'values' => 'array',
+            'organization_structure' => 'array',
             'established_year' => 'integer',
         ];
     }

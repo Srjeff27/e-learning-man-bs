@@ -24,7 +24,7 @@
 
     <!-- Dark Mode Script - Must be in head to prevent flash -->
     <script>
-        (function  () {
+        (function () {
             const darkMode = localStorage.getItem('darkMode');
             if (darkMode === 'true' || (!darkMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -48,22 +48,42 @@
     @include('partials.footer')
 
     <!-- Floating Chatbot Button -->
-    <a href="{{ route('chatbot.index') }}"
-        class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full p-4 shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 group"
-        title="Chat dengan BINU">
-        <div class="relative">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+    <!-- Floating Chatbot Wrapper -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+        <!-- Animated Speech Bubble -->
+        <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-4 py-3 rounded-2xl rounded-br-none shadow-xl border border-blue-500 mb-3 mr-2 animate-bounce-subtle max-w-[200px] text-sm font-medium relative pointer-events-auto origin-bottom-right transition-all duration-300"
+             x-data="{ show: true }"
+             x-init="setTimeout(() => { show = true }, 1000)"
+             x-show="show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-90 translate-y-4"
+             x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
+             style="animation: float 3s ease-in-out infinite;">
+            Kalo ada yang bingung tanya BINU ya! 👋
+            
+            <!-- Triangle -->
+            <div class="absolute -bottom-2 right-4 w-4 h-4 bg-white dark:bg-slate-800 border-r border-b border-blue-500 transform rotate-45"></div>
         </div>
-        <!-- Tooltip -->
-        <span
-            class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            Tanya BINU 🤖
-        </span>
-    </a>
+
+        <!-- Button -->
+        <a href="{{ route('chatbot.index') }}"
+            class="bg-white text-white rounded-full p-1 shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 group border-2 border-green-500 w-16 h-16 flex items-center justify-center overflow-hidden pointer-events-auto relative"
+            title="Chat dengan BINU">
+            <img src="{{ asset('images/icon-chatbot.png') }}" alt="BINU" class="w-full h-full object-cover animate-pulse-slow">
+            
+            <!-- Notification Dot -->
+            <span class="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+            <span class="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+        </a>
+    </div>
+
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
 
     @stack('scripts')
 </body>

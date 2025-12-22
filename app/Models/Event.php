@@ -15,6 +15,9 @@ class Event extends Model
         'event_date',
         'end_date',
         'category',
+        'semester',
+        'academic_year',
+        'event_type',
         'is_all_day',
         'color',
         'location',
@@ -38,5 +41,15 @@ class Event extends Model
     {
         return $query->whereMonth('event_date', now()->month)
             ->whereYear('event_date', now()->year);
+    }
+
+    public function scopeBySemester($query, $semester)
+    {
+        return $query->where('semester', $semester);
+    }
+
+    public function scopeByAcademicYear($query, $year)
+    {
+        return $query->where('academic_year', $year);
     }
 }
