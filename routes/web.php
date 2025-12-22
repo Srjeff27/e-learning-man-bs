@@ -88,6 +88,26 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Banner Management
     Route::resource('banners', BannerController::class)->except(['show']);
     Route::patch('banners/{banner}/toggle', [BannerController::class, 'toggle'])->name('banners.toggle');
+
+    // Profile Management
+    Route::get('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+
+    // News Management
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+    Route::patch('news/{news}/toggle', [\App\Http\Controllers\Admin\NewsController::class, 'toggle'])->name('news.toggle');
+
+    // Gallery Management
+    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
+
+    // Calendar/Events Management
+    Route::resource('calendar', \App\Http\Controllers\Admin\CalendarController::class);
+
+    // Contact Messages Management
+    Route::get('contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index');
+    Route::get('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('contacts.show');
+    Route::patch('contacts/{contact}/read', [\App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])->name('contacts.mark-read');
+    Route::delete('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy');
 });
 
 /*

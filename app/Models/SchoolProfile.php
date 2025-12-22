@@ -24,17 +24,25 @@ class SchoolProfile extends Model
         'established_year',
         'vision',
         'mission',
+        'missions',
+        'values',
         'motto',
         'logo',
         'favicon',
         'social_media',
         'accreditation',
+        'history',
+        'facilities',
+        'school_photo',
     ];
 
     protected function casts(): array
     {
         return [
             'social_media' => 'array',
+            'facilities' => 'array',
+            'missions' => 'array',
+            'values' => 'array',
             'established_year' => 'integer',
         ];
     }

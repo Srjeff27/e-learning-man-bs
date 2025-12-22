@@ -30,7 +30,8 @@ class HomeController extends Controller
      */
     public function profil()
     {
-        return view('pages.profil');
+        $profile = \App\Models\SchoolProfile::first();
+        return view('pages.profil', compact('profile'));
     }
 
     /**
@@ -38,7 +39,8 @@ class HomeController extends Controller
      */
     public function visiMisi()
     {
-        return view('pages.visi-misi');
+        $profile = \App\Models\SchoolProfile::first();
+        return view('pages.visi-misi', compact('profile'));
     }
 
     /**
