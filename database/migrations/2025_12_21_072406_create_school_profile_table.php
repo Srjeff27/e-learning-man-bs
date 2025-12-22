@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('school_profile', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('npsn', 20)->nullable();
+            $table->text('address')->nullable();
+            $table->string('phone', 30)->nullable();
+            $table->string('fax', 30)->nullable();
+            $table->string('email')->nullable();
+            $table->string('website')->nullable();
+            $table->string('principal_name')->nullable();
+            $table->string('principal_nip', 30)->nullable();
+            $table->year('established_year')->nullable();
+            $table->text('vision')->nullable();
+            $table->text('mission')->nullable();
+            $table->text('motto')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
+            $table->json('social_media')->nullable();
+            $table->string('accreditation', 5)->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('school_profile');
+    }
+};
