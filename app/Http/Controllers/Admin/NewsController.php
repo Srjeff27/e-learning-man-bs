@@ -4,11 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $news = News::with('author')->latest()->paginate(10);
@@ -26,7 +35,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'nullable|string|max:50',
-            'featured_image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|max:5120', // 5MB max
             'is_published' => 'boolean',
             'is_featured' => 'boolean',
         ]);
@@ -37,8 +46,12 @@ class NewsController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
         $validated['published_at'] = $validated['is_published'] ? now() : null;
 
+        // Convert image to WebP
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('news', 'public');
+            $validated['featured_image'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(1920, 1080)
+                ->optimizeAndStore($request->file('featured_image'), 'news');
         }
 
         News::create($validated);
@@ -57,7 +70,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'nullable|string|max:50',
-            'featured_image' => 'nullable|image|max:2048',
+            'featured_image' => 'nullable|image|max:5120', // 5MB max
             'is_published' => 'boolean',
             'is_featured' => 'boolean',
         ]);
@@ -69,8 +82,17 @@ class NewsController extends Controller
             $validated['published_at'] = now();
         }
 
+        // Convert image to WebP
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('news', 'public');
+            // Delete old image
+            if ($news->featured_image) {
+                Storage::disk('public')->delete($news->featured_image);
+            }
+
+            $validated['featured_image'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(1920, 1080)
+                ->optimizeAndStore($request->file('featured_image'), 'news');
         }
 
         $news->update($validated);
@@ -87,6 +109,11 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
+        // Delete image file
+        if ($news->featured_image) {
+            Storage::disk('public')->delete($news->featured_image);
+        }
+
         $news->delete();
         return redirect()->route('admin.news.index')->with('success', 'Berita berhasil dihapus.');
     }

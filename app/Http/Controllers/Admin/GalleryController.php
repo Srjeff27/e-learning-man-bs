@@ -4,10 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $galleries = Gallery::with('uploader')->latest()->paginate(12);
@@ -26,16 +35,37 @@ class GalleryController extends Controller
             'description' => 'nullable|string|max:500',
             'type' => 'required|in:photo,video',
             'category' => 'nullable|string|max:50',
-            'file' => 'required|file|max:10240',
+            'file' => 'required|file|max:10240', // 10MB max
             'is_featured' => 'boolean',
         ]);
 
         $validated['uploaded_by'] = auth()->id();
         $validated['is_featured'] = $request->has('is_featured');
-        $validated['file_path'] = $request->file('file')->store('galleries', 'public');
 
-        if ($validated['type'] === 'photo') {
-            $validated['thumbnail'] = $validated['file_path'];
+        // Handle file upload with WebP conversion for photos
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            if ($validated['type'] === 'photo' && $this->isImage($file)) {
+                // Convert to WebP for photos
+                $validated['file_path'] = $this->imageService
+                    ->setQuality(85)
+                    ->setMaxDimensions(1920, 1080)
+                    ->optimizeAndStore($file, 'galleries');
+
+                // Create thumbnail
+                $validated['thumbnail'] = $this->imageService
+                    ->setQuality(80)
+                    ->createThumbnail($validated['file_path'], 'galleries/thumbnails', 400, 300);
+
+                // If thumbnail creation failed, use original
+                if (!$validated['thumbnail']) {
+                    $validated['thumbnail'] = $validated['file_path'];
+                }
+            } else {
+                // Store video or non-image files as-is
+                $validated['file_path'] = $file->store('galleries', 'public');
+            }
         }
 
         Gallery::create($validated);
@@ -61,9 +91,33 @@ class GalleryController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('file')) {
-            $validated['file_path'] = $request->file('file')->store('galleries', 'public');
-            if ($gallery->type === 'photo') {
-                $validated['thumbnail'] = $validated['file_path'];
+            $file = $request->file('file');
+
+            // Delete old files
+            if ($gallery->file_path) {
+                Storage::disk('public')->delete($gallery->file_path);
+            }
+            if ($gallery->thumbnail && $gallery->thumbnail !== $gallery->file_path) {
+                Storage::disk('public')->delete($gallery->thumbnail);
+            }
+
+            if ($gallery->type === 'photo' && $this->isImage($file)) {
+                // Convert to WebP for photos
+                $validated['file_path'] = $this->imageService
+                    ->setQuality(85)
+                    ->setMaxDimensions(1920, 1080)
+                    ->optimizeAndStore($file, 'galleries');
+
+                // Create thumbnail
+                $validated['thumbnail'] = $this->imageService
+                    ->setQuality(80)
+                    ->createThumbnail($validated['file_path'], 'galleries/thumbnails', 400, 300);
+
+                if (!$validated['thumbnail']) {
+                    $validated['thumbnail'] = $validated['file_path'];
+                }
+            } else {
+                $validated['file_path'] = $file->store('galleries', 'public');
             }
         }
 
@@ -74,7 +128,30 @@ class GalleryController extends Controller
 
     public function destroy(Gallery $gallery)
     {
+        // Delete files
+        if ($gallery->file_path) {
+            Storage::disk('public')->delete($gallery->file_path);
+        }
+        if ($gallery->thumbnail && $gallery->thumbnail !== $gallery->file_path) {
+            Storage::disk('public')->delete($gallery->thumbnail);
+        }
+
         $gallery->delete();
         return redirect()->route('admin.galleries.index')->with('success', 'Item galeri berhasil dihapus.');
+    }
+
+    /**
+     * Check if file is an image
+     */
+    protected function isImage($file): bool
+    {
+        $mimeType = $file->getMimeType();
+        return in_array($mimeType, [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'image/bmp',
+        ]);
     }
 }

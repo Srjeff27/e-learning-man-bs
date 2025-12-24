@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,13 @@ use Illuminate\Validation\Rules\Password;
 
 class AccountSettingsController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Show the account settings form.
      */
@@ -45,7 +53,7 @@ class AccountSettingsController extends Controller
     public function updateAvatar(Request $request)
     {
         $request->validate([
-            'avatar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'avatar' => ['required', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:2048'],
         ]);
 
         $user = Auth::user();
@@ -55,8 +63,12 @@ class AccountSettingsController extends Controller
             Storage::disk('public')->delete($user->avatar);
         }
 
-        // Store new avatar
-        $path = $request->file('avatar')->store('avatars', 'public');
+        // Store new avatar with WebP conversion
+        $path = $this->imageService
+            ->setQuality(85)
+            ->setMaxDimensions(400, 400) // Smaller for avatars
+            ->optimizeAndStore($request->file('avatar'), 'avatars');
+
         $user->update(['avatar' => $path]);
 
         return back()->with('success', 'Foto profil berhasil diperbarui.');

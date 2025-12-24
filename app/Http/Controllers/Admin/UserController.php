@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,13 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Display a listing of users.
      */
@@ -58,16 +66,19 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa,ortu',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'avatar' => 'nullable|image|max:1024',
+            'avatar' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        // Handle photo upload
+        // Handle avatar upload with WebP conversion
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(400, 400)
+                ->optimizeAndStore($request->file('avatar'), 'avatars');
         }
 
         $user = User::create($validated);
@@ -105,7 +116,7 @@ class UserController extends Controller
             'role' => 'required|in:admin,guru,siswa,ortu',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'avatar' => 'nullable|image|max:1024',
+            'avatar' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
         ]);
 
@@ -117,13 +128,16 @@ class UserController extends Controller
 
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        // Handle photo upload
+        // Handle avatar upload with WebP conversion
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(400, 400)
+                ->optimizeAndStore($request->file('avatar'), 'avatars');
         }
 
         $user->update($validated);

@@ -7,6 +7,7 @@ use App\Models\ChatSession;
 use App\Models\Faq;
 use App\Services\DeepSeekService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ChatbotController extends Controller
@@ -70,15 +71,26 @@ class ChatbotController extends Controller
             ]
         );
 
-        // Save user message
-        ChatMessage::create([
+        // Save user message FIRST
+        $userMsg = ChatMessage::create([
             'chat_session_id' => $session->id,
             'role' => 'user',
             'content' => $validated['message'],
         ]);
 
-        // Get conversation history
+        // Refresh the session to get updated messages
+        $session->refresh();
+
+        // Get conversation history (now includes the just-saved user message)
         $messages = $session->getRecentMessages(8);
+
+        // Log for debugging
+        Log::info('Chatbot Send', [
+            'session_id' => $session->id,
+            'user_message' => $validated['message'],
+            'history_count' => count($messages),
+            'history' => $messages,
+        ]);
 
         // Build system prompt with FAQ context
         $systemPrompt = $this->deepSeek->getSystemPrompt();

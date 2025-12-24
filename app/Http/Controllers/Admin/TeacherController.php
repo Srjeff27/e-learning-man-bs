@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Display a listing of teachers.
      */
@@ -61,15 +69,18 @@ class TeacherController extends Controller
             'address' => 'nullable|string|max:500',
             'education' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:1024',
+            'photo' => 'nullable|image|max:2048', // 2MB max
             'is_active' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        // Handle photo upload
+        // Handle photo upload with WebP conversion
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('teachers', 'public');
+            $validated['photo'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(800, 800) // Smaller for profile photos
+                ->optimizeAndStore($request->file('photo'), 'teachers');
         }
 
         Teacher::create($validated);
@@ -100,19 +111,23 @@ class TeacherController extends Controller
             'address' => 'nullable|string|max:500',
             'education' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:1024',
+            'photo' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        // Handle photo upload
+        // Handle photo upload with WebP conversion
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
             if ($teacher->photo) {
                 Storage::disk('public')->delete($teacher->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('teachers', 'public');
+
+            $validated['photo'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(800, 800)
+                ->optimizeAndStore($request->file('photo'), 'teachers');
         }
 
         $teacher->update($validated);

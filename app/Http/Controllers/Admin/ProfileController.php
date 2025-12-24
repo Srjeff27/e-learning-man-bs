@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SchoolProfile;
 use App\Models\Teacher;
+use App\Services\ImageOptimizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
+    protected ImageOptimizationService $imageService;
+
+    public function __construct(ImageOptimizationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
         $profile = SchoolProfile::first() ?? new SchoolProfile();
@@ -55,11 +63,15 @@ class ProfileController extends Controller
             'history' => 'nullable|string',
             'facilities' => 'nullable|array',
             'facilities.*' => 'nullable|string|max:255',
-            'school_photo' => 'nullable|image|max:2048',
+            'school_photo' => 'nullable|image|max:5120',
         ]);
 
+        // Convert school_photo to WebP
         if ($request->hasFile('school_photo')) {
-            $validated['school_photo'] = $request->file('school_photo')->store('profile', 'public');
+            $validated['school_photo'] = $this->imageService
+                ->setQuality(85)
+                ->setMaxDimensions(1920, 1080)
+                ->optimizeAndStore($request->file('school_photo'), 'profile');
         }
 
         // Filter empty facilities
@@ -86,9 +98,12 @@ class ProfileController extends Controller
         // Process pimpinan
         if (isset($validated['pimpinan'])) {
             foreach ($validated['pimpinan'] as $key => $item) {
-                // Handle new photo upload
+                // Handle new photo upload with WebP conversion
                 if ($request->hasFile("pimpinan_photos.$key")) {
-                    $item['photo'] = $request->file("pimpinan_photos.$key")->store('organization', 'public');
+                    $item['photo'] = $this->imageService
+                        ->setQuality(85)
+                        ->setMaxDimensions(400, 400)
+                        ->optimizeAndStore($request->file("pimpinan_photos.$key"), 'organization');
                 }
 
                 // Set type
@@ -103,9 +118,12 @@ class ProfileController extends Controller
         // Process koordinator
         if (isset($validated['koordinator'])) {
             foreach ($validated['koordinator'] as $key => $item) {
-                // Handle new photo upload
+                // Handle new photo upload with WebP conversion
                 if ($request->hasFile("koordinator_photos.$key")) {
-                    $item['photo'] = $request->file("koordinator_photos.$key")->store('organization', 'public');
+                    $item['photo'] = $this->imageService
+                        ->setQuality(85)
+                        ->setMaxDimensions(400, 400)
+                        ->optimizeAndStore($request->file("koordinator_photos.$key"), 'organization');
                 }
 
                 // Set type
