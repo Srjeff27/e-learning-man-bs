@@ -160,29 +160,30 @@
     class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 transition-colors duration-300">
     @include('partials.navbar')
 
-    <main class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <main
+        class="relative min-h-screen flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
-                class="absolute top-1/4 -left-20 w-72 h-72 bg-gradient-to-br from-blue-400/30 to-cyan-400/30 rounded-full blur-3xl animate-float">
+                class="absolute top-1/4 -left-20 w-40 sm:w-72 h-40 sm:h-72 bg-gradient-to-br from-blue-400/30 to-cyan-400/30 rounded-full blur-3xl animate-float">
             </div>
             <div
-                class="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-float-reverse">
+                class="absolute bottom-1/4 -right-20 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-float-reverse">
             </div>
             <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse-glow">
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-pulse-glow">
             </div>
-            <div class="absolute top-20 right-1/4 w-20 h-20 bg-gradient-to-br from-blue-500/40 to-cyan-500/40 rounded-2xl blur-xl animate-float"
+            <div class="hidden sm:block absolute top-20 right-1/4 w-20 h-20 bg-gradient-to-br from-blue-500/40 to-cyan-500/40 rounded-2xl blur-xl animate-float"
                 style="animation-delay: 1s;"></div>
-            <div class="absolute bottom-32 left-1/4 w-16 h-16 bg-gradient-to-br from-indigo-500/40 to-blue-500/40 rounded-full blur-xl animate-float-reverse"
+            <div class="hidden sm:block absolute bottom-32 left-1/4 w-16 h-16 bg-gradient-to-br from-indigo-500/40 to-blue-500/40 rounded-full blur-xl animate-float-reverse"
                 style="animation-delay: 2s;"></div>
         </div>
 
         <div class="relative z-10 w-full max-w-md">
-            <div class="text-center mb-8 animate-slide-up">
-                <a href="{{ url('/') }}" class="inline-flex items-center justify-center mb-6 group">
+            <div class="text-center mb-6 sm:mb-8 animate-slide-up">
+                <a href="{{ url('/') }}" class="inline-flex items-center justify-center mb-4 sm:mb-6 group">
                     <div class="relative">
                         <div
-                            class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-500 group-hover:scale-105 overflow-hidden">
+                            class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-500 group-hover:scale-105 overflow-hidden">
                             <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR"
                                 class="w-full h-full object-contain">
                         </div>
@@ -192,33 +193,33 @@
                     </div>
                 </a>
                 <h1
-                    class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent">
+                    class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent">
                     @yield('header', 'Selamat Datang')
                 </h1>
-                <p class="mt-3 text-slate-600 dark:text-slate-400">
+                <p class="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400">
                     @yield('subheader', 'Sistem Informasi SMAN 2 KAUR')
                 </p>
             </div>
 
             <div
-                class="glass-card rounded-3xl shadow-2xl shadow-blue-500/10 p-8 md:p-10 animate-slide-up animate-delay-100">
-                <div class="glossy-bg absolute inset-0 rounded-3xl pointer-events-none"></div>
+                class="glass-card rounded-2xl sm:rounded-3xl shadow-2xl shadow-blue-500/10 p-5 sm:p-8 md:p-10 animate-slide-up animate-delay-100">
+                <div class="glossy-bg absolute inset-0 rounded-2xl sm:rounded-3xl pointer-events-none"></div>
                 <div class="relative z-10">
                     @yield('content')
                 </div>
             </div>
 
             @hasSection('footer')
-                <div class="mt-8 text-center animate-slide-up animate-delay-200">
+                <div class="mt-6 sm:mt-8 text-center animate-slide-up animate-delay-200">
                     @yield('footer')
                 </div>
             @endif
 
-            <div class="mt-8 text-center animate-slide-up animate-delay-300">
+            <div class="mt-6 sm:mt-8 text-center animate-slide-up animate-delay-300">
                 <a href="{{ url('/') }}"
-                    class="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 group">
-                    <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
+                    class="inline-flex items-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 group">
+                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
