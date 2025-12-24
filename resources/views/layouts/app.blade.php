@@ -13,9 +13,18 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-sman2.png') }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <!-- Resource Hints for Faster Loading -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.bunny.net">
+    <link rel="preconnect" href="https://ui-avatars.com" crossorigin>
+    <link rel="dns-prefetch" href="https://ui-avatars.com">
+
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -58,7 +67,7 @@
             x-transition:leave="transition ease-in duration-300"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-12 scale-95" @click.outside="isOpen = false"
-            class="mb-6 w-[380px] max-w-[calc(100vw-2rem)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/40 dark:border-slate-700/50 overflow-hidden flex flex-col relative ring-1 ring-black/5 dark:ring-white/10">
+            class="mb-4 w-[340px] xs:w-[360px] sm:w-[380px] max-w-[calc(100vw-1.5rem)] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl sm:rounded-[2rem] shadow-2xl border border-white/40 dark:border-slate-700/50 overflow-hidden flex flex-col relative ring-1 ring-black/5 dark:ring-white/10">
 
             <!-- Glass Reflection Overlay -->
             <div
@@ -67,43 +76,35 @@
 
             <!-- Header -->
             <div
-                class="relative z-10 bg-gradient-to-r from-blue-600/90 to-cyan-500/90 backdrop-blur-md p-5 flex items-center justify-between border-b border-white/10">
+                class="relative z-10 bg-gradient-to-r from-blue-600 to-cyan-500 p-3 sm:p-4 flex items-center justify-between border-b border-white/10">
                 <div class="absolute inset-0 bg-noise opacity-10"></div>
 
-                <div class="flex items-center gap-4">
-                    <div class="relative group">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
                         <div
-                            class="absolute -inset-1 bg-white/30 rounded-full blur transition duration-500 group-hover:bg-white/50">
-                        </div>
-                        <div
-                            class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md p-0.5 border border-white/40 overflow-hidden relative shadow-lg">
+                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/20 p-0.5 border border-white/40 overflow-hidden shadow-lg">
                             <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU"
                                 class="w-full h-full object-cover">
                         </div>
                         <div
-                            class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 border-2 border-blue-600 rounded-full animate-pulse">
-                        </div>
+                            class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-blue-600 rounded-full"></div>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-white text-xl tracking-wide drop-shadow-sm">BINU</h3>
-                        <p
-                            class="text-blue-50 text-xs font-medium bg-blue-700/30 px-2 py-0.5 rounded-full inline-block backdrop-blur-sm border border-blue-400/30">
-                            Asisten Virtual</p>
+                        <h3 class="font-bold text-white text-base sm:text-lg">BINU</h3>
+                        <p class="text-blue-100 text-[10px] sm:text-xs">Asisten Virtual</p>
                     </div>
                 </div>
                 <button @click="isOpen = false"
-                    class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-110 group">
-                    <svg class="w-5 h-5 text-white/90 group-hover:text-white" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M6 18L18 6M6 6l12 12" />
+                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
 
             <!-- Messages Area -->
             <div x-ref="messagesContainer"
-                class="relative z-10 flex-1 overflow-y-auto p-5 space-y-5 scroll-smooth custom-scrollbar">
+                class="relative z-10 flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 scroll-smooth custom-scrollbar">
                 <!-- Welcome Message -->
                 <template x-if="messages.length === 0">
                     <div class="text-center py-10 animate-fade-in-up">
@@ -208,61 +209,37 @@
                 </div>
             </div>
 
-            <!-- Main Orb Button -->
-            <button @click="isOpen = !isOpen; showBubble = false" class="relative group w-20 h-20 focus:outline-none"
+            <button @click="isOpen = !isOpen; showBubble = false" 
+                class="relative group w-14 h-14 xs:w-16 xs:h-16 sm:w-18 sm:h-18 focus:outline-none"
                 aria-label="Toggle Chat">
 
-                <!-- Radiant Glow -->
-                <div
-                    class="absolute inset-0 bg-blue-500 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500 animate-pulse-slow">
-                </div>
-                <div
-                    class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-full blur opacity-30 group-hover:opacity-70 transition-opacity duration-500">
-                </div>
+                {{-- Simple Glow --}}
+                <div class="absolute inset-0 bg-blue-500 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
 
-                <!-- Glass Orb -->
-                <div
-                    class="relative w-full h-full rounded-full bg-gradient-to-b from-blue-500/90 to-blue-700/90 shadow-2xl border-2 border-white/20 backdrop-blur-sm overflow-hidden transform transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">
-
-                    <!-- Shine Effects -->
-                    <div
-                        class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-full pointer-events-none">
-                    </div>
-                    <div class="absolute bottom-2 right-2 w-8 h-8 bg-blue-400/50 rounded-full blur-md"></div>
-                    <div
-                        class="absolute top-3 left-3 w-4 h-2 bg-white/60 rounded-full transform -rotate-45 filter blur-[1px]">
-                    </div>
-
-                    <!-- Icon Image -->
+                {{-- Main Button --}}
+                <div class="relative w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-xl border border-white/20 overflow-hidden transition-transform group-hover:scale-105">
+                    
+                    {{-- Shine --}}
+                    <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/25 to-transparent rounded-t-full"></div>
+                    
+                    {{-- Icon --}}
                     <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU"
-                        class="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover:scale-110"
-                        :class="isOpen ? 'scale-90 opacity-0' : 'scale-100 opacity-100'">
+                        class="w-full h-full object-cover relative z-10 p-1.5 transition-all"
+                        :class="isOpen ? 'scale-75 opacity-0' : 'scale-100 opacity-100'">
 
-                    <!-- Close Icon (shown when open) -->
-                    <div class="absolute inset-0 flex items-center justify-center z-20 transition-all duration-300 transform"
+                    {{-- Close Icon --}}
+                    <div class="absolute inset-0 flex items-center justify-center z-20 transition-all"
                         :class="isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'">
-                        <svg class="w-8 h-8 text-white drop-shadow-md" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                d="M6 18L18 6M6 6l12 12" />
+                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </div>
-
-                    <!-- Ripple Ring (Outer) -->
-                    <div class="absolute inset-0 border-2 border-white/30 rounded-full animate-ping-slow pointer-events-none"
-                        x-show="!isOpen"></div>
                 </div>
 
-                <!-- Notification Badge -->
-                <div x-show="!isOpen" x-transition:enter="transition transform ease-out duration-300"
-                    x-transition:enter-start="scale-0 translate-y-2" x-transition:enter-end="scale-100 translate-y-0"
-                    class="absolute -top-1 -right-1 flex h-6 w-6">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span
-                        class="relative inline-flex rounded-full h-6 w-6 bg-gradient-to-r from-red-500 to-pink-500 border-2 border-white flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-                        1
-                    </span>
+                {{-- Badge --}}
+                <div x-show="!isOpen" class="absolute -top-0.5 -right-0.5 flex h-4 w-4 sm:h-5 sm:w-5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-full w-full bg-red-500 items-center justify-center text-[8px] sm:text-[10px] text-white font-bold">1</span>
                 </div>
             </button>
         </div>

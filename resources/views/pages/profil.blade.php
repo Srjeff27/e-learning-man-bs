@@ -4,44 +4,47 @@
 @section('meta_description', 'Profil lengkap ' . ($profile->name ?? 'SMAN 2 KAUR') . ' - Sejarah, fasilitas, dan informasi umum sekolah')
 
 @section('content')
-    <section class="relative hero-gradient py-24 lg:py-32 overflow-hidden">
+    <section class="relative hero-gradient py-16 sm:py-20 lg:py-32 overflow-hidden">
         <div class="absolute inset-0 opacity-30">
-            <div class="absolute top-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-float"></div>
             <div
-                class="absolute bottom-10 left-10 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl animate-float animate-delay-300">
+                class="absolute top-20 right-20 w-40 sm:w-72 h-40 sm:h-72 bg-blue-500/20 rounded-full blur-3xl animate-float">
+            </div>
+            <div
+                class="absolute bottom-10 left-10 w-32 sm:w-64 h-32 sm:h-64 bg-cyan-500/20 rounded-full blur-3xl animate-float">
             </div>
         </div>
 
-        <div class="container-custom relative z-10 text-center">
+        <div class="container-custom relative z-10 text-center px-4">
             <span
-                class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-blue-200 text-sm font-medium mb-6 animate-fade-in">
-                <svg class="w-4 h-4 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-blue-200 text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-cyan-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
                 Tentang Kami
             </span>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 animate-fade-in animate-delay-100">
+            <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 sm:mb-6 animate-fade-in">
                 Profil <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Sekolah</span>
             </h1>
-            <p class="text-lg text-blue-100/80 max-w-2xl mx-auto animate-fade-in animate-delay-200">
-                Mengenal lebih dekat {{ $profile->name ?? 'SMAN 2 KAUR' }} dan perjalanan kami dalam dunia pendidikan
+            <p class="text-sm sm:text-lg text-blue-100/80 max-w-2xl mx-auto animate-fade-in px-2">
+                Mengenal lebih dekat {{ $profile->name ?? 'SMAN 2 KAUR' }}
             </p>
         </div>
     </section>
 
-    <section class="section bg-white dark:bg-slate-900 transition-colors">
-        <div class="container-custom">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
+    <section class="py-12 sm:py-16 lg:py-20 bg-white dark:bg-slate-900 transition-colors">
+        <div class="container-custom px-4">
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
                 <div class="order-2 lg:order-1">
                     <span
-                        class="inline-block px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-semibold mb-4">
+                        class="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-semibold mb-3 sm:mb-4">
                         Sejarah Kami
                     </span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-6">
+                    <h2 class="text-xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 sm:mb-6">
                         Perjalanan <span class="gradient-text">{{ $profile->name ?? 'SMAN 2 KAUR' }}</span>
                     </h2>
-                    <div class="space-y-4 text-slate-600 dark:text-slate-400">
+                    <div class="space-y-3 sm:space-y-4 text-slate-600 dark:text-slate-400 text-sm sm:text-base">
                         @if($profile && $profile->history)
                             {!! nl2br(e($profile->history)) !!}
                         @else
@@ -81,12 +84,13 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="absolute -bottom-6 -right-6 glass-card p-6 animate-float">
+                        <div
+                            class="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 glass-card p-4 sm:p-6 animate-float">
                             @php
                                 $yearsEstablished = $profile && $profile->established_year ? date('Y') - $profile->established_year : 30;
                             @endphp
-                            <div class="text-4xl font-bold gradient-text">{{ $yearsEstablished }}+</div>
-                            <div class="text-slate-600 dark:text-slate-400 text-sm">Tahun Berdiri</div>
+                            <div class="text-2xl sm:text-4xl font-bold gradient-text">{{ $yearsEstablished }}+</div>
+                            <div class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">Tahun Berdiri</div>
                         </div>
                     </div>
                 </div>
@@ -94,14 +98,16 @@
         </div>
     </section>
 
-    <section class="section bg-slate-50 dark:bg-slate-800 transition-colors">
-        <div class="container-custom">
-            <div class="section-header">
-                <h2 class="section-title">Fasilitas Unggulan</h2>
-                <p class="section-subtitle">Sarana dan prasarana modern untuk mendukung kegiatan belajar mengajar</p>
+    <section class="py-12 sm:py-16 lg:py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+        <div class="container-custom px-4">
+            <div class="text-center mb-8 sm:mb-12">
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-2 sm:mb-3">
+                    Fasilitas Unggulan</h2>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400">Sarana dan prasarana modern untuk
+                    mendukung kegiatan belajar mengajar</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
                 @php
                     $facilities = $profile && $profile->facilities ? $profile->facilities : [
                         '36 Ruang Kelas',
@@ -127,14 +133,15 @@
 
                 @foreach($facilities as $index => $facility)
                     @if(!empty($facility))
-                        <div class="glass-card p-6 text-center group">
+                        <div class="glass-card p-4 sm:p-6 text-center group">
                             <div
-                                class="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="w-10 h-10 sm:w-14 sm:h-14 mx-auto bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-2 sm:mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 sm:w-7 sm:h-7 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     {!! $icons[$index % count($icons)] !!}
                                 </svg>
                             </div>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2">{{ $facility }}</h3>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">{{ $facility }}</h3>
                         </div>
                     @endif
                 @endforeach

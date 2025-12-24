@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Custom xs breakpoint for very small screens (iPhone SE, etc.) */
+@theme {
+    --breakpoint-xs: 375px;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {

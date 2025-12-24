@@ -375,7 +375,7 @@
     <div class="flex min-h-screen relative overflow-hidden">
         <!-- Sidebar -->
         <aside :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}"
-            class="glass-sidebar fixed lg:sticky top-0 left-0 z-50 lg:z-auto w-80 h-screen transform transition-transform duration-500 lg:translate-x-0 flex flex-col lg:relative">
+            class="glass-sidebar fixed top-0 left-0 z-50 w-80 h-screen transform transition-transform duration-500 lg:translate-x-0 flex flex-col">
 
             <!-- Logo & Brand -->
             <div class="p-6 border-b border-slate-200/40 dark:border-slate-700/40">
@@ -459,7 +459,7 @@
                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                     </div>
-                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Siswa</span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Kelola Siswa</span>
                 </a>
 
                 <!-- Content Section -->
@@ -467,20 +467,6 @@
                     <span
                         class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Konten</span>
                 </div>
-
-                <a href="{{ route('admin.profile.index') }}"
-                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
-                    <span class="nav-indicator"></span>
-                    <div
-                        class="nav-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-800/50">
-                        <svg class="w-5 h-5 {{ request()->routeIs('admin.profile.*') ? 'text-white' : 'text-indigo-500 dark:text-indigo-400' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                    </div>
-                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Profil Sekolah</span>
-                </a>
 
                 <a href="{{ route('admin.news.index') }}"
                     class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
@@ -493,12 +479,25 @@
                                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                         </svg>
                     </div>
-                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Berita</span>
-                    <span class="notification-badge"></span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Berita & Artikel</span>
                 </a>
 
-                <a href="{{ route('admin.galleries.index') }}"
-                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.banners.index') }}"
+                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                    <span class="nav-indicator"></span>
+                    <div
+                        class="nav-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-800/50">
+                        <svg class="w-5 h-5 {{ request()->routeIs('admin.banners.*') ? 'text-white' : 'text-amber-500 dark:text-amber-400' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Kelola Pengumuman</span>
+                </a>
+
+                <a href="{{ route('admin.gallery.index') }}"
+                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.gallery.*') ? 'active' : '' }}">
                     <span class="nav-indicator"></span>
                     <div
                         class="nav-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-800/50">
@@ -508,7 +507,7 @@
                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                     </div>
-                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Galeri</span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Galeri Sekolah</span>
                 </a>
 
                 <a href="{{ route('admin.calendar.index') }}"
@@ -531,6 +530,20 @@
                         class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pengaturan</span>
                 </div>
 
+                <a href="{{ route('admin.profile.index') }}"
+                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                    <span class="nav-indicator"></span>
+                    <div
+                        class="nav-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-800/50">
+                        <svg class="w-5 h-5 {{ request()->routeIs('admin.profile.*') ? 'text-white' : 'text-indigo-500 dark:text-indigo-400' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Profil Sekolah</span>
+                </a>
+
                 <a href="{{ route('account.settings') }}"
                     class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('account.*') ? 'active' : '' }}">
                     <span class="nav-indicator"></span>
@@ -546,137 +559,87 @@
                     </div>
                     <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Pengaturan Akun</span>
                 </a>
+                <form method="POST" action="{{ route('logout') }}" class="mt-8 mb-4 px-4">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-600 hover:text-white transition-all duration-300 group">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span class="font-semibold text-sm">Keluar</span>
+                    </button>
+                </form>
             </nav>
-
-            <!-- User Profile -->
-            <div class="p-4 border-t border-slate-200/40 dark:border-slate-700/40 mt-auto">
-                <div class="glass-card rounded-2xl p-4 shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <div
-                            class="user-avatar w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg relative animate-pulse-glow">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-bold text-slate-800 dark:text-white truncate">
-                                {{ auth()->user()->name }}
-                            </p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Administrator</p>
-                        </div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                                title="Logout">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col min-h-screen overflow-hidden">
-            <!-- Header -->
-            <header class="glass-card sticky top-0 z-30 border-b border-slate-200/50 dark:border-slate-700/50">
-                <div class="flex items-center justify-between px-4 lg:px-6 py-4">
-                    <div class="flex items-center space-x-4">
-                        <button @click="toggleSidebar()"
-                            class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors lg:hidden">
-                            <div class="w-6 h-6 flex flex-col justify-center space-y-1.5"
-                                :class="{'sidebar-open': sidebarOpen}">
-                                <span
-                                    class="hamburger-line w-6 h-0.5 bg-slate-700 dark:bg-slate-300 rounded-full"></span>
-                                <span
-                                    class="hamburger-line w-6 h-0.5 bg-slate-700 dark:bg-slate-300 rounded-full"></span>
-                                <span
-                                    class="hamburger-line w-6 h-0.5 bg-slate-700 dark:bg-slate-300 rounded-full"></span>
-                            </div>
-                        </button>
-                        <div class="flex flex-col">
-                            <h1 class="text-xl font-bold text-slate-900 dark:text-white">
-                                @yield('page-title', 'Dashboard')</h1>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">
-                                @yield('page-subtitle', 'Sistem Manajemen Sekolah Terpadu')</p>
-                        </div>
-                    </div>
+        <main class="flex-1 min-w-0 overflow-hidden lg:ml-80">
+            <!-- Top Header -->
+            <header
+                class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-30">
+                <div class="px-6 py-4 flex items-center justify-between">
+                    <button @click="toggleSidebar()"
+                        class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <svg class="w-6 h-6 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
 
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-4 ml-auto">
                         <!-- Dark Mode Toggle -->
-                        <button @click="toggleDarkMode()" class="relative w-12 h-6 rounded-full dark-mode-toggle"
-                            :title="darkMode ? 'Mode Terang' : 'Mode Gelap'">
-                            <span class="sr-only">Toggle dark mode</span>
+                        <button @click="toggleDarkMode()"
+                            class="dark-mode-toggle w-12 h-6 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 hover:scale-105 active:scale-95">
                         </button>
 
-                        <!-- Quick Actions -->
-                        <a href="{{ route('home') }}" target="_blank"
-                            class="hidden md:inline-flex items-center px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            Website
-                        </a>
+                        <!-- Profile Dropdown -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" @click.outside="open = false"
+                                class="flex items-center space-x-3 focus:outline-none group">
+                                <div class="text-right hidden md:block">
+                                    <p class="text-sm font-bold text-slate-800 dark:text-white group-hover:text-blue-500">
+                                        {{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 capitalize">{{ auth()->user()->role }}
+                                    </p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 p-0.5 shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300">
+                                    <div class="w-full h-full rounded-full bg-white dark:bg-slate-800 overflow-hidden">
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 translate-y-2"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 translate-y-2" style="display: none;"
+                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-1 z-50">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                        Sign out
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-4 lg:p-6">
-                <!-- Notifications -->
-                @if (session('success'))
-                    <div class="mb-6 animate-fade-up">
-                        <div
-                            class="glass-card p-4 rounded-2xl border-l-4 border-emerald-500 shadow-lg shadow-emerald-500/10">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ session('success') }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="mb-6 animate-fade-up">
-                        <div class="glass-card p-4 rounded-2xl border-l-4 border-red-500 shadow-lg shadow-red-500/10">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ session('error') }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Page Content -->
-                <div class="animate-fade-up">
-                    @yield('content')
-                </div>
-            </main>
-        </div>
+            <!-- Page Content -->
+            <div class="p-6 lg:p-8 max-w-7xl mx-auto">
+                {{ $slot ?? '' }}
+                @yield('content')
+            </div>
+        </main>
     </div>
 </body>
 

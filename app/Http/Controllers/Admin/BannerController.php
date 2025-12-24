@@ -9,16 +9,16 @@ use Illuminate\Http\Request;
 class BannerController extends Controller
 {
     /**
-     * Display a listing of banners.
+     * Display a listing of the resource.
      */
     public function index()
     {
-        $banners = Banner::ordered()->paginate(10);
+        $banners = Banner::orderBy('order', 'asc')->get();
         return view('admin.banners.index', compact('banners'));
     }
 
     /**
-     * Show the form for creating a new banner.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -26,31 +26,29 @@ class BannerController extends Controller
     }
 
     /**
-     * Store a newly created banner.
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:1000',
-            'link' => 'nullable|url|max:255',
+            'content' => 'required|string',
+            'link' => 'nullable|string|max:255',
             'link_text' => 'nullable|string|max:50',
-            'is_active' => 'boolean',
             'order' => 'integer|min:0',
+            'is_active' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
-        $validated['link_text'] = $validated['link_text'] ?? 'Selengkapnya';
-        $validated['order'] = $validated['order'] ?? 0;
 
         Banner::create($validated);
 
         return redirect()->route('admin.banners.index')
-            ->with('success', 'Banner berhasil ditambahkan.');
+            ->with('success', 'Pengumuman berhasil ditambahkan');
     }
 
     /**
-     * Show the form for editing the specified banner.
+     * Show the form for editing the specified resource.
      */
     public function edit(Banner $banner)
     {
@@ -58,47 +56,35 @@ class BannerController extends Controller
     }
 
     /**
-     * Update the specified banner.
+     * Update the specified resource in storage.
      */
     public function update(Request $request, Banner $banner)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:1000',
-            'link' => 'nullable|url|max:255',
+            'content' => 'required|string',
+            'link' => 'nullable|string|max:255',
             'link_text' => 'nullable|string|max:50',
-            'is_active' => 'boolean',
             'order' => 'integer|min:0',
+            'is_active' => 'boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
-        $validated['link_text'] = $validated['link_text'] ?? 'Selengkapnya';
 
         $banner->update($validated);
 
         return redirect()->route('admin.banners.index')
-            ->with('success', 'Banner berhasil diperbarui.');
+            ->with('success', 'Pengumuman berhasil diperbarui');
     }
 
     /**
-     * Toggle the active status of the specified banner.
-     */
-    public function toggle(Banner $banner)
-    {
-        $banner->update(['is_active' => !$banner->is_active]);
-
-        $status = $banner->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return back()->with('success', "Banner berhasil {$status}.");
-    }
-
-    /**
-     * Remove the specified banner.
+     * Remove the specified resource from storage.
      */
     public function destroy(Banner $banner)
     {
         $banner->delete();
 
         return redirect()->route('admin.banners.index')
-            ->with('success', 'Banner berhasil dihapus.');
+            ->with('success', 'Pengumuman berhasil dihapus');
     }
 }

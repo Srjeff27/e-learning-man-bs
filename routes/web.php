@@ -97,8 +97,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
 
     // Banner Management
-    Route::resource('banners', BannerController::class)->except(['show']);
-    Route::patch('banners/{banner}/toggle', [BannerController::class, 'toggle'])->name('banners.toggle');
+    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
 
     // Profile Management
     Route::get('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
@@ -109,7 +108,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('news/{news}/toggle', [\App\Http\Controllers\Admin\NewsController::class, 'toggle'])->name('news.toggle');
 
     // Gallery Management
-    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
+    Route::resource('gallery', \App\Http\Controllers\Admin\GalleryController::class);
 
     // Calendar/Events Management
     Route::resource('calendar', \App\Http\Controllers\Admin\CalendarController::class);
