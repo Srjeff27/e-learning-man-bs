@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 
 class DeepSeekService
 {
@@ -21,60 +20,65 @@ class DeepSeekService
     }
 
     /**
-     * Mengambil System Prompt yang Dinamis (Cerdas).
-     * Bisa disisipi data dari Database (misal: Berita Terbaru).
+     * Dibuat PUBLIC kembali agar Controller yang memanggil ini tidak error.
+     * Logika tetap dinamis (ada tanggal & jam).
      */
-    private function buildSystemPrompt(): string
+    public function getSystemPrompt(): string
     {
-        // Contoh: Mengambil pengumuman terbaru dari Cache/DB (Simulasi)
-        // $latestNews = Announcement::latest()->take(3)->get();
-        $today = now()->format('l, d F Y');
-        $dynamicNews = "Pengumuman Sekolah Terbaru: PPDB Gelombang 2 dibuka sampai 30 Juni.";
+        $today = now()->locale('id')->isoFormat('dddd, D MMMM Y'); // Contoh: Senin, 25 Desember 2025
+        
+        // Anda bisa mengambil ini dari database jika mau
+        $dynamicNews = "Pengumuman: PPDB Gelombang 2 dibuka sampai akhir bulan ini.";
 
         return <<<EOT
-Kamu adalah "BINU" (Buddy Informatif untuk Navigasi Umum), AI Assistant resmi SMAN 2 KAUR yang cerdas, empatik, dan gaul tapi sopan.
+Kamu adalah "BINU" (Buddy Informatif untuk Navigasi Umum), AI Assistant resmi SMAN 2 KAUR.
 Tanggal hari ini: {$today}.
 
 IDENTITAS & GAYA BICARA:
-1.  **Nama:** BINU.
-2.  **Gaya:** Ramah, solutif, menggunakan emoji yang pas (😊, 🎓, ✨), dan bahasa Indonesia yang natural (tidak kaku seperti robot).
-3.  **Vibe:** Seperti kakak kelas OSIS yang sangat membantu adik kelasnya.
+1. Nama: BINU.
+2. Gaya: Ramah, solutif, menggunakan emoji yang pas (😊, 🎓, ✨), dan bahasa Indonesia yang natural.
+3. Peran: Seperti kakak kelas OSIS yang sangat membantu adik kelasnya.
 
-DATA PENGETAHUAN (KNOWLEDGE BASE):
-- **Sekolah:** SMAN 2 KAUR (Akreditasi A).
-- **Lokasi:** Tanjung Kemuning III, Kab. Kaur, Bengkulu 38955.
-- **Kontak:** (0739) 123456 | info@sman2kaur.nett.to
-- **Jam:** Senin-Jumat (07:00 - 15:00 WIB).
-- **Kurikulum:** Merdeka Belajar.
-- **Info Live:** {$dynamicNews}
+DATA PENGETAHUAN:
+- Sekolah: SMAN 2 KAUR (Akreditasi A).
+- Alamat: Tanjung Kemuning III, Kab. Kaur, Bengkulu 38955.
+- Telepon: (0739) 123456 | Email: info@sman2kaur.nett.to
+- Jam Operasional: Senin-Jumat (07:00 - 15:00 WIB).
+- Info Terkini: {$dynamicNews}
 
-ATURAN LOGIKA (CHAIN OF THOUGHT):
-1.  Jika user bertanya tentang hal sensitif/kekerasan, tolak dengan halus.
-2.  Jika user bertanya data spesifik siswa (nilai/SPP), minta mereka login ke portal (jangan berikan data di chat).
-3.  Jika user menyapa (Halo, Pagi), jawab dengan variasi sapaan yang hangat, jangan robotik.
-4.  Jika informasi tidak ada di "DATA PENGETAHUAN", katakan: "Waduh, untuk info detail itu BINU sarankan kontak admin ya, biar akurat! 🙏"
-
+PANDUAN MENJAWAB:
+- Jawab langsung ke inti pertanyaan.
+- Jika user menyapa (Halo, Pagi), jawab dengan hangat.
+- Jika info tidak tersedia di data di atas, sarankan hubungi pihak sekolah.
+- Jangan mengarang data sensitif (nilai siswa, nomor HP guru pribadi).
 EOT;
     }
 
     /**
-     * Memproses pesan agar hemat token tapi tetap ingat konteks.
+     * Memproses pesan: Menambahkan System Prompt otomatis & Membatasi history.
      */
     private function optimizeMessages(array $messages): array
     {
-        // 1. Selalu sertakan System Prompt di awal
+        $optimized = [];
+
+        // 1. Masukkan System Prompt di urutan pertama
+        // Kita panggil getSystemPrompt() di sini
         $optimized[] = [
             'role' => 'system',
-            'content' => $this->buildSystemPrompt(),
+            'content' => $this->getSystemPrompt(),
         ];
 
-        // 2. Ambil N pesan terakhir saja untuk menjaga konteks tanpa memboroskan token
-        // DeepSeek memiliki konteks window besar, tapi kita hemat biaya.
-        $recentMessages = array_slice($messages, -$this->maxHistoryMessages);
+        // 2. Filter pesan agar tidak mengambil system prompt ganda dari user input (jika ada)
+        // dan hanya mengambil N pesan terakhir untuk hemat token.
+        $userMessages = array_filter($messages, function($msg) {
+            return $msg['role'] !== 'system';
+        });
+
+        $recentMessages = array_slice($userMessages, -$this->maxHistoryMessages);
 
         foreach ($recentMessages as $msg) {
             $optimized[] = [
-                'role' => $msg['role'], // 'user' atau 'assistant'
+                'role' => $msg['role'],
                 'content' => $msg['content'],
             ];
         }
@@ -83,62 +87,73 @@ EOT;
     }
 
     /**
-     * Fungsi Chat Utama dengan Retry Logic & Error Handling Canggih.
+     * Fungsi Chat Utama
      */
-    public function chat(array $historyMessages): array
+    public function chat(array $messages): array
     {
         if (empty($this->apiKey)) {
-            return $this->errorResponse('API Key belum disetting.');
+            return [
+                'success' => false,
+                'message' => 'API Key belum disetting.',
+                'error' => 'API_KEY_MISSING'
+            ];
         }
 
-        $payload = [
-            'model' => $this->model,
-            'messages' => $this->optimizeMessages($historyMessages),
-            'temperature' => 0.8, // Sedikit lebih kreatif (0.7 - 1.0)
-            'max_tokens' => 800,
-            'presence_penalty' => 0.3, // Mencegah pengulangan kata
-            'frequency_penalty' => 0.3,
-        ];
-
         try {
-            // Menggunakan retry() bawaan Laravel untuk koneksi yang tidak stabil
-            $response = Http::retry(3, 100) // Coba 3x, jeda 100ms
-                ->timeout(30)
-                ->withToken($this->apiKey)
-                ->post($this->baseUrl . '/chat/completions', $payload);
+            // Gunakan optimizeMessages untuk menyusun payload
+            $finalMessages = $this->optimizeMessages($messages);
+
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $this->apiKey,
+                    'Content-Type' => 'application/json',
+                ])
+                ->post($this->baseUrl . '/chat/completions', [
+                    'model' => $this->model,
+                    'messages' => $finalMessages,
+                    'temperature' => 0.7, // 0.7 = seimbang antara kreatif dan akurat
+                    'max_tokens' => 800,
+                ]);
 
             if ($response->successful()) {
                 $data = $response->json();
-                $reply = $data['choices'][0]['message']['content'] ?? 'BINU sedang berpikir keras, tapi belum nemu jawabannya nih.. 🤔';
-                
                 return [
                     'success' => true,
-                    'message' => $reply,
-                    'usage' => $data['usage'] ?? [],
+                    'message' => $data['choices'][0]['message']['content'] ?? 'Maaf, BINU sedang tidak bisa menjawab.',
+                    'usage' => $data['usage'] ?? null,
                 ];
             }
 
-            // Log Error Detail dari API
-            Log::error('DeepSeek API Error', ['status' => $response->status(), 'body' => $response->body()]);
-            return $this->errorResponse('Maaf, server BINU lagi sibuk banget. Coba lagi ya!');
+            Log::error('DeepSeek API Error', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
 
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            return $this->errorResponse('Koneksi internet bermasalah. Cek sinyal kamu ya!');
+            return [
+                'success' => false,
+                'message' => 'Maaf, terjadi gangguan pada server BINU.',
+                'error' => 'API_ERROR',
+            ];
+
         } catch (\Exception $e) {
-            Log::error('DeepSeek Exception', ['message' => $e->getMessage()]);
-            return $this->errorResponse('Terjadi kesalahan teknis pada sistem BINU.');
+            Log::error('DeepSeek Service Exception', ['message' => $e->getMessage()]);
+            return [
+                'success' => false,
+                'message' => 'Layanan sementara tidak tersedia.',
+                'error' => 'SERVICE_UNAVAILABLE',
+            ];
         }
     }
 
     /**
-     * Helper untuk format error yang konsisten
+     * Untuk testing satu kali tanya (tanpa history)
      */
-    private function errorResponse(string $message): array
+    public function ask(string $question): string
     {
-        return [
-            'success' => false,
-            'message' => $message . ' 😥',
-            'error' => true
-        ];
+        $result = $this->chat([
+            ['role' => 'user', 'content' => $question]
+        ]);
+
+        return $result['message'];
     }
 }

@@ -92,15 +92,9 @@ class ChatbotController extends Controller
             'history' => $messages,
         ]);
 
-        // Build system prompt with FAQ context
-        $systemPrompt = $this->deepSeek->getSystemPrompt();
-        $faqContext = Faq::getContextString();
-        if ($faqContext) {
-            $systemPrompt .= "\n\n" . $faqContext;
-        }
 
-        // Get AI response
-        $result = $this->deepSeek->chat($messages, $systemPrompt);
+        // Get AI response (system prompt is now handled internally by DeepSeekService)
+        $result = $this->deepSeek->chat($messages);
 
         // Save assistant response
         $assistantMessage = ChatMessage::create([
