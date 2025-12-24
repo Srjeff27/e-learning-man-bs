@@ -108,7 +108,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('news/{news}/toggle', [\App\Http\Controllers\Admin\NewsController::class, 'toggle'])->name('news.toggle');
 
     // Gallery Management
-    Route::resource('gallery', \App\Http\Controllers\Admin\GalleryController::class);
+    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
 
     // Calendar/Events Management
     Route::resource('calendar', \App\Http\Controllers\Admin\CalendarController::class);

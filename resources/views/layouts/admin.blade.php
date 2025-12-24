@@ -496,8 +496,8 @@
                     <span class="font-semibold text-slate-700 dark:text-slate-200 text-sm">Kelola Pengumuman</span>
                 </a>
 
-                <a href="{{ route('admin.gallery.index') }}"
-                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.gallery.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.galleries.index') }}"
+                    class="nav-item flex items-center px-4 py-3.5 rounded-xl relative {{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}">
                     <span class="nav-indicator"></span>
                     <div
                         class="nav-icon w-10 h-10 rounded-xl flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-800/50">
@@ -599,9 +599,12 @@
                             <button @click="open = !open" @click.outside="open = false"
                                 class="flex items-center space-x-3 focus:outline-none group">
                                 <div class="text-right hidden md:block">
-                                    <p class="text-sm font-bold text-slate-800 dark:text-white group-hover:text-blue-500">
-                                        {{ auth()->user()->name }}</p>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 capitalize">{{ auth()->user()->role }}
+                                    <p
+                                        class="text-sm font-bold text-slate-800 dark:text-white group-hover:text-blue-500">
+                                        {{ auth()->user()->name }}
+                                    </p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 capitalize">
+                                        {{ auth()->user()->role }}
                                     </p>
                                 </div>
                                 <div
