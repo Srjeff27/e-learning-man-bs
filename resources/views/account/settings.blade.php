@@ -1,4 +1,4 @@
-@extends(auth()->user()->isAdmin() ? 'layouts.admin' : 'layouts.lms')
+@extends(auth()->user()->isAdmin() ? 'layouts.admin' : (auth()->user()->isSiswa() ? 'layouts.student' : 'layouts.teacher'))
 
 @section('title', 'Pengaturan Akun')
 @section('page-title', 'Pengaturan Akun')
@@ -117,11 +117,11 @@
                             @csrf
                             @method('PUT')
                             <input type="file" name="avatar" id="avatar" accept="image/*" class="block w-full text-sm text-slate-500 dark:text-slate-400
-                                    file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0
-                                    file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600
-                                    dark:file:bg-blue-900/30 dark:file:text-blue-400
-                                    hover:file:bg-blue-100 dark:hover:file:bg-blue-900/50
-                                    file:cursor-pointer file:transition-colors">
+                                                file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0
+                                                file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600
+                                                dark:file:bg-blue-900/30 dark:file:text-blue-400
+                                                hover:file:bg-blue-100 dark:hover:file:bg-blue-900/50
+                                                file:cursor-pointer file:transition-colors">
                             <button type="submit"
                                 class="px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-xl transition-colors whitespace-nowrap">
                                 Upload
