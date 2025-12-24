@@ -148,6 +148,20 @@
                         </div>
                         <span :class="activeTab === 'profil' ? 'opacity-100' : 'opacity-0'" class="w-2 h-2 rounded-full bg-blue-500"></span>
                     </button>
+
+                    <button @click="activeTab = 'guru-staff'" :class="activeTab === 'guru-staff' ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-600 dark:text-blue-400 border-l-4 border-blue-500' : 'text-slate-700 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'"
+                        class="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center space-x-3 group">
+                        <div class="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium">Guru & Staff</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Daftar pengajar</p>
+                        </div>
+                        <span :class="activeTab === 'guru-staff' ? 'opacity-100' : 'opacity-0'" class="w-2 h-2 rounded-full bg-blue-500"></span>
+                    </button>
                 </nav>
 
                 <div class="mt-6 p-4 rounded-xl bg-gradient-to-br from-blue-500/5 to-cyan-500/5">
@@ -783,6 +797,91 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {{-- Tab: Guru & Staff --}}
+                <div x-show="activeTab === 'guru-staff'" x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-4"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    class="space-y-6">
+                    
+                    <div class="glass-card rounded-2xl p-6 transform transition-all duration-300 hover:shadow-xl">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Daftar Guru & Staff</h3>
+                                <p class="text-slate-600 dark:text-slate-400 mt-1">Kelola data guru dan staf sekolah</p>
+                            </div>
+                            <a href="{{ route('admin.teachers.create') }}" 
+                                class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Tambah Guru</span>
+                            </a>
+                        </div>
+
+                        @if($teachers->isEmpty())
+                            <div class="text-center py-12">
+                                <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-800 dark:text-white mb-2">Belum Ada Data</h4>
+                                <p class="text-slate-500 dark:text-slate-400 mb-4">Tambahkan guru dan staf untuk ditampilkan di website.</p>
+                            </div>
+                        @else
+                            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                @foreach($teachers as $teacher)
+                                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-50/50 to-white dark:from-slate-800/30 dark:to-slate-800/10 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all duration-300 group">
+                                        <div class="flex items-start gap-4">
+                                            <div class="w-14 h-14 rounded-xl overflow-hidden bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex-shrink-0">
+                                                @if($teacher->photo)
+                                                    <img src="{{ Storage::url($teacher->photo) }}" alt="{{ $teacher->full_name }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="font-bold text-slate-800 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                                    {{ $teacher->full_name }}
+                                                </h4>
+                                                <p class="text-sm text-slate-500 dark:text-slate-400 truncate">
+                                                    {{ $teacher->subject_specialty ?? '-' }}
+                                                </p>
+                                                @if($teacher->nip)
+                                                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">NIP: {{ $teacher->nip }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold {{ $teacher->is_active ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' }}">
+                                                {{ $teacher->is_active ? 'Aktif' : 'Nonaktif' }}
+                                            </span>
+                                            <div class="flex items-center gap-2">
+                                                <a href="{{ route('admin.teachers.edit', $teacher) }}" 
+                                                    class="p-2 rounded-lg text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors" title="Edit">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            
+                            <div class="mt-6 text-center">
+                                <a href="{{ route('admin.teachers.index') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold text-sm">
+                                    Lihat Semua Guru & Staff →
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </form>

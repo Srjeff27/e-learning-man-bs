@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolProfile;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,8 @@ class ProfileController extends Controller
     public function index()
     {
         $profile = SchoolProfile::first() ?? new SchoolProfile();
-        return view('admin.profile.index', compact('profile'));
+        $teachers = Teacher::orderBy('full_name')->get();
+        return view('admin.profile.index', compact('profile', 'teachers'));
     }
 
     public function update(Request $request)

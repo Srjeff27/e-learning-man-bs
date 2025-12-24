@@ -108,12 +108,12 @@ class AttendanceController extends Controller
         foreach ($validated['attendance'] as $studentId => $data) {
             Attendance::updateOrCreate(
                 [
-                    'classroom_id' => $classroom->id,
+                    'session_id' => $session->id,
                     'student_id' => $studentId,
-                    'date' => \Carbon\Carbon::parse($session->date)->format('Y-m-d'),
                 ],
                 [
-                    'session_id' => $session->id,
+                    'classroom_id' => $classroom->id,
+                    'date' => \Carbon\Carbon::parse($session->date)->format('Y-m-d'),
                     'status' => $data['status'],
                     'notes' => $data['notes'] ?? null,
                     'recorded_by' => auth()->id(),
