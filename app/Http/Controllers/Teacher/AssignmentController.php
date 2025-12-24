@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
 use App\Models\Classroom;
+use App\Models\Notification;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 
@@ -48,7 +49,19 @@ class AssignmentController extends Controller
             $validated['published_at'] = now();
         }
 
-        Assignment::create($validated);
+        $assignment = Assignment::create($validated);
+
+        // Notify all students in the classroom about the new assignment
+        if ($validated['is_published']) {
+            $studentIds = $classroom->students()->pluck('users.id')->toArray();
+            Notification::notifyMany(
+                $studentIds,
+                'assignment',
+                'Tugas Baru: ' . $assignment->title,
+                'Guru telah menambahkan tugas baru di kelas ' . $classroom->name,
+                route('student.assignments.show', [$classroom, $assignment])
+            );
+        }
 
         return redirect()->route('teacher.classrooms.show', $classroom)
             ->with('success', 'Tugas berhasil dibuat.');
@@ -127,6 +140,15 @@ class AssignmentController extends Controller
         ]);
 
         $submission->grade($validated['score'], $validated['feedback'], auth()->user());
+
+        // Notify the student that their submission has been graded
+        Notification::notify(
+            $submission->student_id,
+            'grade',
+            'Nilai Tugas: ' . $assignment->title,
+            'Tugas Anda telah dinilai. Nilai: ' . $validated['score'] . '/' . $assignment->max_score,
+            route('student.assignments.show', [$classroom, $assignment])
+        );
 
         return back()->with('success', 'Nilai berhasil disimpan.');
     }

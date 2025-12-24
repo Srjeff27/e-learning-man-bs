@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
 use App\Models\Classroom;
+use App\Models\Notification;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -120,6 +121,15 @@ class AssignmentController extends Controller
 
         $submission->save();
         $submission->submit();
+
+        // Notify the teacher that a student has submitted
+        Notification::notify(
+            $classroom->teacher_id,
+            'assignment',
+            'Pengumpulan Tugas: ' . $assignment->title,
+            auth()->user()->name . ' telah mengumpulkan tugas di kelas ' . $classroom->name,
+            route('teacher.assignments.show', [$classroom, $assignment])
+        );
 
         return redirect()->route('student.assignments.show', [$classroom, $assignment])
             ->with('success', 'Tugas berhasil dikumpulkan.');

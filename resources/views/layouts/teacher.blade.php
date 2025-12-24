@@ -70,7 +70,7 @@
         $navInactive = "text-slate-500 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1";
 
         $navActive = "bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-white/20 
-                                      before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
+                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
     @endphp
 
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
@@ -283,16 +283,99 @@
                         </svg>
                     </button>
 
-                    <button
-                        class="relative p-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 shadow-sm transition-transform active:scale-95">
-                        <span
-                            class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-800 animate-pulse"></span>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                            </path>
-                        </svg>
-                    </button>
+                    {{-- Notification Dropdown --}}
+                    <div x-data="{ 
+                        open: false, 
+                        notifications: [], 
+                        unreadCount: 0,
+                        loading: false,
+                        async fetchNotifications() {
+                            this.loading = true;
+                            try {
+                                const res = await fetch('/notifications/recent');
+                                const data = await res.json();
+                                this.notifications = data.notifications;
+                                this.unreadCount = data.unread_count;
+                            } catch (e) {
+                                console.error('Failed to fetch notifications', e);
+                            }
+                            this.loading = false;
+                        },
+                        async markAsRead(id) {
+                            await fetch(`/notifications/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content } });
+                            this.notifications = this.notifications.map(n => n.id === id ? {...n, is_read: true} : n);
+                            this.unreadCount = Math.max(0, this.unreadCount - 1);
+                        }
+                    }" @click.away="open = false" class="relative">
+                        <button @click="open = !open; if(open) fetchNotifications()"
+                            class="relative p-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-sm transition-transform active:scale-95">
+                            <span x-show="unreadCount > 0" x-cloak
+                                class="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold bg-red-500 text-white rounded-full px-1">
+                                <span x-text="unreadCount > 9 ? '9+' : unreadCount"></span>
+                            </span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                </path>
+                            </svg>
+                        </button>
+
+                        {{-- Dropdown Panel --}}
+                        <div x-show="open" x-cloak x-transition
+                            class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
+                            <div
+                                class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                                <h3 class="font-bold text-slate-800 dark:text-white">Notifikasi</h3>
+                                <a href="{{ route('notifications.index') }}"
+                                    class="text-xs text-emerald-600 hover:underline">Lihat Semua</a>
+                            </div>
+
+                            <div class="max-h-80 overflow-y-auto">
+                                <template x-if="loading">
+                                    <div class="p-6 text-center text-slate-400">
+                                        <svg class="animate-spin h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                        </svg>
+                                    </div>
+                                </template>
+
+                                <template x-if="!loading && notifications.length === 0">
+                                    <div class="p-8 text-center text-slate-400">
+                                        <svg class="w-10 h-10 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                            </path>
+                                        </svg>
+                                        <p class="text-sm">Tidak ada notifikasi</p>
+                                    </div>
+                                </template>
+
+                                <template x-for="notif in notifications" :key="notif.id">
+                                    <a :href="notif.action_url || '#'" @click="markAsRead(notif.id)"
+                                        class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors"
+                                        :class="{ 'bg-emerald-50/50 dark:bg-emerald-900/10': !notif.is_read }">
+                                        <div class="flex gap-3">
+                                            <span class="text-xl" x-text="notif.icon"></span>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate"
+                                                    x-text="notif.title"></p>
+                                                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2"
+                                                    x-text="notif.message"></p>
+                                                <p class="text-[10px] text-slate-400 mt-1" x-text="notif.created_at">
+                                                </p>
+                                            </div>
+                                            <span x-show="!notif.is_read"
+                                                class="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-1"></span>
+                                        </div>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 

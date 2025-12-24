@@ -1,4 +1,4 @@
-@extends('layouts.lms')
+@extends(auth()->user()->isAdmin() ? 'layouts.admin' : (auth()->user()->isSiswa() ? 'layouts.student' : 'layouts.teacher'))
 
 @section('title', 'Notifikasi')
 
