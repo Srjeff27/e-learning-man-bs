@@ -71,7 +71,7 @@
                         @if($profile && $profile->school_photo)
                             <div class="aspect-square rounded-3xl shadow-2xl overflow-hidden">
                                 <img src="{{ Storage::url($profile->school_photo) }}" alt="Foto {{ $profile->name }}"
-                                    class="w-full h-full object-cover">
+                                    width="640" height="640" class="w-full h-full object-cover">
                             </div>
                         @else
                             <div

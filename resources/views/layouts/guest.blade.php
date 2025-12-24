@@ -184,7 +184,7 @@
                     <div class="relative">
                         <div
                             class="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-500 group-hover:scale-105 overflow-hidden">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR"
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR" width="80" height="80"
                                 class="w-full h-full object-contain">
                         </div>
                         <div

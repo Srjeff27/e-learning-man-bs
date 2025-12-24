@@ -63,7 +63,7 @@
                                 class="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl sm:rounded-2xl md:rounded-3xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
                                 @if($teacher->photo || ($teacher->user && $teacher->user->avatar))
                                     <img src="{{ Storage::url($teacher->photo ?? $teacher->user->avatar) }}"
-                                        class="w-full h-full object-cover" alt="{{ $teacher->full_name }}">
+                                        width="112" height="112" class="w-full h-full object-cover" alt="{{ $teacher->full_name }}">
                                 @else
                                     <svg class="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white/80" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +156,7 @@
                                 <div
                                     class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 overflow-hidden">
                                     @if(isset($staff['photo']) && $staff['photo'])
-                                        <img src="{{ Storage::url($staff['photo']) }}" class="w-full h-full object-cover"
+                                        <img src="{{ Storage::url($staff['photo']) }}" width="80" height="80" class="w-full h-full object-cover"
                                             alt="{{ $staff['name'] }}">
                                     @else
                                         <svg class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-blue-500" fill="none" stroke="currentColor"

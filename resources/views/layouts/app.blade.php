@@ -84,7 +84,7 @@
                     <div class="relative">
                         <div
                             class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-white/20 p-0.5 border border-white/40 overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU"
+                            <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="40" height="40"
                                 class="w-full h-full object-cover">
                         </div>
                         <div
@@ -118,8 +118,8 @@
                             </div>
                             <div
                                 class="relative w-full h-full rounded-full bg-gradient-to-br from-white/90 to-blue-50/50 backdrop-blur-sm p-1 border-2 border-white/60 shadow-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                                <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU"
-                                    class="w-full h-full object-cover">
+                                <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="96"
+                                    height="96" class="w-full h-full object-cover">
                             </div>
                         </div>
                         <h4
@@ -233,7 +233,7 @@
                     </div>
 
                     {{-- Icon --}}
-                    <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU"
+                    <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="64" height="64"
                         class="w-full h-full object-cover relative z-10 p-1.5 transition-all"
                         :class="isOpen ? 'scale-75 opacity-0' : 'scale-100 opacity-100'">
 

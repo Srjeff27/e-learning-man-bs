@@ -52,16 +52,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                    currentSlide: 0,
-                                                    totalSlides: {{ $latestNews->count() }},
-                                                    autoSlideInterval: null,
-                                                    init() { this.startAutoSlide(); },
-                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                }"
+                                                            currentSlide: 0,
+                                                            totalSlides: {{ $latestNews->count() }},
+                                                            autoSlideInterval: null,
+                                                            init() { this.startAutoSlide(); },
+                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                        }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
@@ -456,8 +456,8 @@
                     class="mt-4 md:mt-0 glass-button inline-flex items-center px-4 sm:px-7 py-2.5 sm:py-4 text-blue-600 dark:text-blue-400 font-bold text-sm sm:text-base rounded-xl transition-all group animate-fade-up"
                     style="animation-delay: 0.2s;">
                     Lihat Semua
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-x-2 transition-transform" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-x-2 transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -466,11 +466,13 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 @foreach($latestNews->take(3) as $index => $news)
-                    <article class="group glass-card glossy rounded-2xl sm:rounded-3xl overflow-hidden card-lift hover-glow animate-fade-up"
+                    <article
+                        class="group glass-card glossy rounded-2xl sm:rounded-3xl overflow-hidden card-lift hover-glow animate-fade-up"
                         style="animation-delay: {{ 0.1 * ($index + 1) }}s;">
                         <div class="relative aspect-video bg-gradient-to-br from-blue-500 to-cyan-500 overflow-hidden">
                             @if($news->featured_image)
-                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}"
+                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="640"
+                                    height="360"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     loading="lazy">
                             @endif
@@ -483,7 +485,8 @@
                         </div>
                         <div class="p-4 sm:p-6 md:p-7">
                             <div class="flex items-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-2 sm:mb-4">
-                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -493,7 +496,8 @@
                                 class="text-sm sm:text-lg md:text-xl font-bold text-slate-800 dark:text-white mb-2 sm:mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                                 {{ $news->title }}
                             </h3>
-                            <p class="text-slate-600 dark:text-slate-400 mb-3 sm:mb-5 line-clamp-2 leading-relaxed text-xs sm:text-sm md:text-base">
+                            <p
+                                class="text-slate-600 dark:text-slate-400 mb-3 sm:mb-5 line-clamp-2 leading-relaxed text-xs sm:text-sm md:text-base">
                                 {{ Str::limit($news->excerpt ?? $news->content, 80) }}
                             </p>
                             <a href="{{ url('/berita') }}"

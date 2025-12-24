@@ -75,7 +75,7 @@
                             class="group relative aspect-square rounded-lg sm:rounded-2xl overflow-hidden cursor-pointer">
                             @if($photo->file_path)
                                 <img src="{{ Storage::url($photo->file_path) }}" alt="{{ $photo->title }}" loading="lazy"
-                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    width="400" height="400" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             @else
                                 <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500"></div>
                             @endif
@@ -159,7 +159,7 @@
                             <div class="aspect-video relative overflow-hidden">
                                 @if($video->thumbnail)
                                     <img src="{{ Storage::url($video->thumbnail) }}" alt="{{ $video->title }}" loading="lazy"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                        width="640" height="360" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                                 @else
                                     <div class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-500"></div>
                                 @endif

@@ -13,7 +13,7 @@
                     <div class="relative">
                         <div
                             class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300 overflow-hidden">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR"
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR" width="48" height="48"
                                 class="w-full h-full object-contain">
                         </div>
                         <div
@@ -154,8 +154,8 @@
                 @auth
                     <a href="{{ url('/dashboard') }}"
                         class="hidden lg:inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-                                                              text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
-                                                              transition-all duration-300 transform hover:-translate-y-0.5">
+                                                                  text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
+                                                                  transition-all duration-300 transform hover:-translate-y-0.5">
                         Dashboard
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -165,13 +165,13 @@
                 @else
                     <div class="hidden lg:flex items-center space-x-3">
                         <a href="{{ route('login') }}" class="px-5 py-2.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 
-                                                                   transition-all duration-300 hover:-translate-y-0.5">
+                                                                       transition-all duration-300 hover:-translate-y-0.5">
                             Masuk
                         </a>
                         <a href="{{ route('register') }}"
                             class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-                                                                  text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
-                                                                  transition-all duration-300 transform hover:-translate-y-0.5">
+                                                                      text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
+                                                                      transition-all duration-300 transform hover:-translate-y-0.5">
                             Daftar
                         </a>
                     </div>
