@@ -11,12 +11,10 @@
 @endpush
 
 @section('content')
-    {{-- Announcement Banner --}}
+    {{-- Announcement Banner - Visible immediately, no entry animation --}}
     @if($banner)
-        <div x-data="{ showBanner: true }" x-show="showBanner" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0 -translate-y-2"
+        <div x-data="{ showBanner: true }" x-show="showBanner" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 -translate-y-2"
             class="relative bg-gradient-to-r from-blue-600 to-cyan-500 text-white overflow-hidden">
 
             <div class="container mx-auto px-3 py-2 relative z-10">
@@ -59,16 +57,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                    currentSlide: 0,
-                                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                                    autoSlideInterval: null,
-                                                                                    init() { this.startAutoSlide(); },
-                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                }"
+                                                                                            currentSlide: 0,
+                                                                                            totalSlides: {{ $latestNews->count() }},
+                                                                                            autoSlideInterval: null,
+                                                                                            init() { this.startAutoSlide(); },
+                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                        }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
