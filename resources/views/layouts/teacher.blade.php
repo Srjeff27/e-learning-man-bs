@@ -57,6 +57,8 @@
             animation: shimmer 2.5s infinite;
         }
     </style>
+
+    @stack('styles')
 </head>
 
 <body
@@ -70,7 +72,7 @@
         $navInactive = "text-slate-500 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1";
 
         $navActive = "bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-white/20 
-                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
+                                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
     @endphp
 
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
@@ -158,6 +160,18 @@
 
                         <span class="relative z-10">Laporan Penilaian</span>
                         @if(request()->routeIs('teacher.reports.*'))
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer">
+                            </div>
+                        @endif
+                    </a>
+
+                    {{-- Link: Absensi --}}
+                    <a href="{{ route('teacher.attendance.classrooms') }}"
+                        class="{{ $navBase }} {{ request()->routeIs('teacher.attendance.*') ? $navActive : $navInactive }}">
+
+                        <span class="relative z-10">Absensi Kelas</span>
+                        @if(request()->routeIs('teacher.attendance.*'))
                             <div
                                 class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer">
                             </div>
@@ -406,6 +420,8 @@
             </main>
         </div>
     </div>
+
+    @stack('scripts')
 </body>
 
 </html>

@@ -126,4 +126,12 @@ class Classroom extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    /**
+     * Get the attendance sessions for the classroom.
+     */
+    public function attendanceSessions(): HasMany
+    {
+        return $this->hasMany(AttendanceSession::class);
+    }
 }

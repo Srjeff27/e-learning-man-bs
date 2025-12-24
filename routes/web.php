@@ -153,6 +153,7 @@ Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher
     Route::get('classrooms/{classroom}/members', [TeacherClassroomController::class, 'members'])->name('classrooms.members');
     Route::delete('classrooms/{classroom}/members/{user}', [TeacherClassroomController::class, 'removeMember'])->name('classrooms.remove-member');
     Route::post('classrooms/{classroom}/archive', [TeacherClassroomController::class, 'archive'])->name('classrooms.archive');
+    Route::delete('classrooms/{classroom}', [TeacherClassroomController::class, 'destroy'])->name('classrooms.destroy');
 
     // Materials
     Route::get('classrooms/{classroom}/materials/create', [TeacherMaterialController::class, 'create'])->name('materials.create');
@@ -180,9 +181,16 @@ Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher
     Route::delete('classrooms/{classroom}/schedules/{schedule}', [\App\Http\Controllers\Teacher\ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
     // Attendance
+    Route::get('attendance', [\App\Http\Controllers\Teacher\AttendanceController::class, 'classrooms'])->name('attendance.classrooms');
     Route::get('classrooms/{classroom}/attendance', [\App\Http\Controllers\Teacher\AttendanceController::class, 'index'])->name('attendance.index');
-    Route::post('classrooms/{classroom}/attendance', [\App\Http\Controllers\Teacher\AttendanceController::class, 'store'])->name('attendance.store');
-    Route::get('classrooms/{classroom}/attendance/report', [\App\Http\Controllers\Teacher\AttendanceController::class, 'report'])->name('attendance.report');
+    Route::get('classrooms/{classroom}/attendance/create', [\App\Http\Controllers\Teacher\AttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('classrooms/{classroom}/attendance', [\App\Http\Controllers\Teacher\AttendanceController::class, 'storeSession'])->name('attendance.store-session');
+    Route::get('classrooms/{classroom}/attendance/{session}/take', [\App\Http\Controllers\Teacher\AttendanceController::class, 'take'])->name('attendance.take');
+    Route::post('classrooms/{classroom}/attendance/{session}', [\App\Http\Controllers\Teacher\AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('classrooms/{classroom}/attendance/{session}', [\App\Http\Controllers\Teacher\AttendanceController::class, 'show'])->name('attendance.show');
+    Route::delete('classrooms/{classroom}/attendance/{session}', [\App\Http\Controllers\Teacher\AttendanceController::class, 'destroySession'])->name('attendance.destroy');
+    Route::get('classrooms/{classroom}/attendance-report', [\App\Http\Controllers\Teacher\AttendanceController::class, 'report'])->name('attendance.report');
+    Route::get('classrooms/{classroom}/attendance-export', [\App\Http\Controllers\Teacher\AttendanceController::class, 'exportReport'])->name('attendance.export');
 });
 
 /*

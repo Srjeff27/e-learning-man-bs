@@ -13,6 +13,7 @@ class Attendance extends Model
     protected $fillable = [
         'classroom_id',
         'student_id',
+        'session_id',
         'date',
         'status',
         'notes',
@@ -58,6 +59,14 @@ class Attendance extends Model
     public function recorder(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    /**
+     * Get the attendance session.
+     */
+    public function session(): BelongsTo
+    {
+        return $this->belongsTo(AttendanceSession::class, 'session_id');
     }
 
     /**

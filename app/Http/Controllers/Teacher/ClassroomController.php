@@ -135,9 +135,25 @@ class ClassroomController extends Controller
     {
         $this->authorize('update', $classroom);
 
-        $classroom->update(['status' => 'archived']);
+        $newStatus = $classroom->status === 'archived' ? 'active' : 'archived';
+        $classroom->update(['status' => $newStatus]);
+
+        $message = $newStatus === 'archived' ? 'Kelas berhasil diarsipkan.' : 'Kelas berhasil diaktifkan kembali.';
 
         return redirect()->route('teacher.classrooms.index')
-            ->with('success', 'Kelas berhasil diarsipkan.');
+            ->with('success', $message);
+    }
+
+    /**
+     * Delete the classroom permanently.
+     */
+    public function destroy(Classroom $classroom)
+    {
+        $this->authorize('update', $classroom);
+
+        $classroom->delete();
+
+        return redirect()->route('teacher.classrooms.index')
+            ->with('success', 'Kelas berhasil dihapus.');
     }
 }
