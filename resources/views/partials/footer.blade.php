@@ -6,8 +6,11 @@
             <!-- Brand & Description Section -->
             <div class="sm:col-span-2 lg:col-span-4">
                 <div class="mb-4 sm:mb-6 flex items-center space-x-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR" width="64" height="64"
-                        class="w-12 h-12 sm:w-16 sm:h-16 object-contain rounded-xl">
+                    <picture>
+                        <source srcset="{{ asset('images/logo.webp') }}" type="image/webp">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo SMAN 2 KAUR" width="64" height="64"
+                            class="w-12 h-12 sm:w-16 sm:h-16 object-contain rounded-xl" loading="lazy">
+                    </picture>
                     <div>
                         <h2
                             class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">

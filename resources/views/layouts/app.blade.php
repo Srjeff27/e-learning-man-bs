@@ -19,6 +19,11 @@
     <link rel="preconnect" href="https://ui-avatars.com" crossorigin>
     <link rel="dns-prefetch" href="https://ui-avatars.com">
 
+    <!-- Preload Critical Images -->
+    <link rel="preload" href="{{ asset('images/logo.webp') }}" as="image" type="image/webp">
+    <link rel="preload" href="{{ asset('images/icon-chatbot.webp') }}" as="image" type="image/webp">
+    @stack('preload')
+
     <!-- Preload Critical Fonts -->
     <link rel="preload" href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
@@ -84,8 +89,11 @@
                     <div class="relative">
                         <div
                             class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-white/20 p-0.5 border border-white/40 overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="40" height="40"
-                                class="w-full h-full object-cover">
+                            <picture>
+                                <source srcset="{{ asset('images/icon-chatbot.webp') }}" type="image/webp">
+                                <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="40"
+                                    height="40" class="w-full h-full object-cover">
+                            </picture>
                         </div>
                         <div
                             class="absolute bottom-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-400 border-2 border-blue-600 rounded-full">
@@ -118,8 +126,11 @@
                             </div>
                             <div
                                 class="relative w-full h-full rounded-full bg-gradient-to-br from-white/90 to-blue-50/50 backdrop-blur-sm p-1 border-2 border-white/60 shadow-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                                <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="96"
-                                    height="96" class="w-full h-full object-cover">
+                                <picture>
+                                    <source srcset="{{ asset('images/icon-chatbot.webp') }}" type="image/webp">
+                                    <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="96"
+                                        height="96" class="w-full h-full object-cover">
+                                </picture>
                             </div>
                         </div>
                         <h4
@@ -233,9 +244,12 @@
                     </div>
 
                     {{-- Icon --}}
-                    <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="64" height="64"
-                        class="w-full h-full object-cover relative z-10 p-1.5 transition-all"
-                        :class="isOpen ? 'scale-75 opacity-0' : 'scale-100 opacity-100'">
+                    <picture>
+                        <source srcset="{{ asset('images/icon-chatbot.webp') }}" type="image/webp">
+                        <img src="{{ asset('images/icon-chatbot-glass.png') }}" alt="BINU" width="64" height="64"
+                            class="w-full h-full object-cover relative z-10 p-1.5 transition-all"
+                            :class="isOpen ? 'scale-75 opacity-0' : 'scale-100 opacity-100'">
+                    </picture>
 
                     {{-- Close Icon --}}
                     <div class="absolute inset-0 flex items-center justify-center z-20 transition-all"
