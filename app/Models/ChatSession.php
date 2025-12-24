@@ -43,19 +43,22 @@ class ChatSession extends Model
 
     /**
      * Get recent messages for context.
+     * Returns messages in chronological order (oldest first, newest last)
+     * which is required by chat APIs like DeepSeek.
      */
     public function getRecentMessages(int $limit = 10): array
     {
+        // Get the latest N messages, ordered by created_at ASC (oldest first)
         return $this->messages()
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->take($limit)
             ->get()
-            ->reverse()
+            ->sortBy('created_at')  // Re-sort to chronological order
+            ->values()
             ->map(fn($m) => [
                 'role' => $m->role,
                 'content' => $m->content,
             ])
-            ->values()
             ->toArray();
     }
 }

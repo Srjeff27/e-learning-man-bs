@@ -380,6 +380,9 @@
                         this.showBubble = true;
                     }, 2000);
 
+                    // Load session from localStorage or create new
+                    this.sessionId = localStorage.getItem('binu_session_id');
+                    
                     // Initialize session
                     this.initSession();
                 },
@@ -392,15 +395,33 @@
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            }
+                            },
+                            body: JSON.stringify({
+                                session_id: this.sessionId
+                            })
                         });
                         const data = await response.json();
                         this.sessionId = data.session_id;
-                        console.log('Session initialized:', this.sessionId);
+                        
+                        // Save to localStorage for persistence
+                        localStorage.setItem('binu_session_id', this.sessionId);
+                        
+                        // Load existing messages if any
+                        if (data.messages && data.messages.length > 0) {
+                            this.messages = data.messages.map(m => ({
+                                role: m.role,
+                                content: m.content
+                            }));
+                        }
+                        
+                        console.log('Session initialized:', this.sessionId, 'Messages:', this.messages.length);
                     } catch (error) {
                         console.error('Failed to init session:', error);
                         // Fallback: generate a random session ID
-                        this.sessionId = 'local-' + Date.now() + '-' + Math.random().toString(36).substring(7);
+                        if (!this.sessionId) {
+                            this.sessionId = 'local-' + Date.now() + '-' + Math.random().toString(36).substring(7);
+                            localStorage.setItem('binu_session_id', this.sessionId);
+                        }
                         console.log('Using fallback session:', this.sessionId);
                     }
                 },
