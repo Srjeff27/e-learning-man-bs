@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Content sources for purging unused CSS - paths relative to project root */
+@source "resources/views/**/*.blade.php";
+@source "resources/js/**/*.js";
+
 /* Custom xs breakpoint for very small screens (iPhone SE, etc.) */
 @theme {
     --breakpoint-xs: 375px;
