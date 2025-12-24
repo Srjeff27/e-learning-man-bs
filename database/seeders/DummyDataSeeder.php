@@ -14,6 +14,18 @@ class DummyDataSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. DATA USER (DEFAULT ADMIN)
+        $admin = \App\Models\User::firstOrCreate(
+            ['email' => 'admin@sman2kaur.sch.id'],
+            [
+                'name' => 'Administrator',
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
+        $this->command->info('User Admin berhasil dibuat/ditemukan.');
+
         // 1. DATA GURU
         $teachers = [
             [
@@ -84,7 +96,7 @@ class DummyDataSeeder extends Seeder
                     'published_at' => Carbon::now()->subDays(rand(0, 30)),
                     'is_featured' => $i <= 3,
                     'views' => rand(10, 500),
-                    'author_id' => 1,
+                    'author_id' => $admin->id,
                 ]
             );
         }
@@ -102,7 +114,7 @@ class DummyDataSeeder extends Seeder
                     'file_path' => 'gallery_placeholder.jpg',
                     'category' => 'Kegiatan',
                     'is_featured' => true,
-                    'uploaded_by' => 1,
+                    'uploaded_by' => $admin->id,
                 ]
             );
         }
@@ -120,7 +132,7 @@ class DummyDataSeeder extends Seeder
                     'file_path' => $url,
                     'category' => 'Profil',
                     'is_featured' => true,
-                    'uploaded_by' => 1,
+                    'uploaded_by' => $admin->id,
                 ]
             );
         }
