@@ -34,6 +34,13 @@
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Alpine.js cloak style - hide elements until Alpine loads -->
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+
     @stack('styles')
 
     <!-- Dark Mode Script - Must be in head to prevent flash -->

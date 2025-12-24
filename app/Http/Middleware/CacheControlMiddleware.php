@@ -4,29 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CacheControlMiddleware
 {
     /**
-     * Cache durations in seconds
+     * Cache durations in seconds (1 year = 31536000)
      */
-    protected array $cacheDurations = [
-        'images' => 31536000, // 1 year
-        'css' => 31536000,    // 1 year
-        'js' => 31536000,     // 1 year
-        'fonts' => 31536000,  // 1 year
-    ];
-
-    /**
-     * File extensions for each type
-     */
-    protected array $fileTypes = [
-        'images' => ['webp', 'jpg', 'jpeg', 'png', 'gif', 'ico', 'svg', 'avif'],
-        'css' => ['css'],
-        'js' => ['js'],
-        'fonts' => ['woff', 'woff2', 'ttf', 'otf', 'eot'],
-    ];
+    protected int $staticCacheDuration = 31536000;
 
     /**
      * Handle an incoming request.
@@ -35,55 +22,73 @@ class CacheControlMiddleware
     {
         $response = $next($request);
 
-        // Skip if not a static file request
-        if (!$this->isStaticFile($request)) {
-            return $response;
+        // Get the path
+        $path = $request->path();
+
+        // Check if it's a static asset request
+        if ($this->isStaticAsset($path)) {
+            $this->setCacheHeaders($response, $this->staticCacheDuration);
         }
-
-        $extension = strtolower(pathinfo($request->path(), PATHINFO_EXTENSION));
-        $cacheType = $this->getCacheType($extension);
-
-        if ($cacheType) {
-            $maxAge = $this->cacheDurations[$cacheType];
-
-            $response->headers->set('Cache-Control', "public, max-age={$maxAge}, immutable");
-            $response->headers->set('Expires', gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT');
-
-            // Add Vary header for proper caching
-            $response->headers->set('Vary', 'Accept-Encoding');
+        // For storage files (images uploaded by users)
+        elseif (str_starts_with($path, 'storage/')) {
+            $this->setCacheHeaders($response, $this->staticCacheDuration);
+        }
+        // For build assets (Vite compiled files)
+        elseif (str_starts_with($path, 'build/')) {
+            $this->setCacheHeaders($response, $this->staticCacheDuration);
         }
 
         return $response;
     }
 
     /**
-     * Check if request is for a static file
+     * Check if the path is a static asset
      */
-    protected function isStaticFile(Request $request): bool
+    protected function isStaticAsset(string $path): bool
     {
-        $path = $request->path();
+        $staticExtensions = [
+            'css',
+            'js',
+            'mjs',
+            'webp',
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+            'ico',
+            'svg',
+            'avif',
+            'woff',
+            'woff2',
+            'ttf',
+            'otf',
+            'eot',
+            'mp4',
+            'webm',
+            'mp3',
+            'wav',
+            'pdf',
+            'zip'
+        ];
+
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-        foreach ($this->fileTypes as $extensions) {
-            if (in_array($extension, $extensions)) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($extension, $staticExtensions);
     }
 
     /**
-     * Get cache type for extension
+     * Set cache headers on response
      */
-    protected function getCacheType(string $extension): ?string
+    protected function setCacheHeaders(Response $response, int $maxAge): void
     {
-        foreach ($this->fileTypes as $type => $extensions) {
-            if (in_array($extension, $extensions)) {
-                return $type;
-            }
+        // Skip if response is an error
+        if ($response->getStatusCode() >= 400) {
+            return;
         }
 
-        return null;
+        $response->headers->set('Cache-Control', "public, max-age={$maxAge}, immutable");
+        $response->headers->set('Expires', gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT');
+        $response->headers->set('Pragma', 'cache');
+        $response->headers->set('Vary', 'Accept-Encoding');
     }
 }

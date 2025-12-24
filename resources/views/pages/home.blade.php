@@ -5,7 +5,8 @@
 
 @push('preload')
     @if(isset($latestNews) && $latestNews->first() && $latestNews->first()->featured_image)
-        <link rel="preload" href="{{ asset('storage/' . $latestNews->first()->featured_image) }}" as="image" fetchpriority="high">
+        <link rel="preload" href="{{ asset('storage/' . $latestNews->first()->featured_image) }}" as="image"
+            fetchpriority="high">
     @endif
 @endpush
 
@@ -58,31 +59,33 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                    currentSlide: 0,
-                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                    autoSlideInterval: null,
-                                                                    init() { this.startAutoSlide(); },
-                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                }"
+                                                                                    currentSlide: 0,
+                                                                                    totalSlides: {{ $latestNews->count() }},
+                                                                                    autoSlideInterval: null,
+                                                                                    init() { this.startAutoSlide(); },
+                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
             {{-- Background Slides --}}
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
                 @foreach($latestNews as $index => $news)
+                    {{-- First slide is visible by default, others are hidden until Alpine loads --}}
                     <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700"
                         x-transition:enter-start="opacity-0 scale-110" x-transition:enter-end="opacity-100 scale-100"
                         x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0">
+                        x-transition:leave-end="opacity-0 scale-95"
+                        class="absolute inset-0 hero-slide {{ $index === 0 ? '' : 'hidden' }}"
+                        :class="{ 'hidden': currentSlide !== {{ $index }} }" @if($index !== 0) x-cloak @endif>
                         @if($news->featured_image)
                             <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
-                                height="1080"
-                                class="absolute inset-0 w-full h-full object-cover transform transition-transform duration-[10000ms] hover:scale-105"
-                                @if($index === 0) loading="eager" fetchpriority="high" @else loading="lazy" @endif>
+                                height="1080" class="absolute inset-0 w-full h-full object-cover" @if($index === 0) loading="eager"
+                                fetchpriority="high" decoding="sync" @else loading="lazy" decoding="async" @endif>
                         @endif
 
                         {{-- Gradient Overlays --}}
