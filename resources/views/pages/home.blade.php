@@ -57,91 +57,151 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                            currentSlide: 0,
-                                                                                                            totalSlides: {{ $latestNews->count() }},
-                                                                                                            autoSlideInterval: null,
-                                                                                                            init() { this.startAutoSlide(); },
-                                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                        }"
+                                                                                                                    currentSlide: 0,
+                                                                                                                    totalSlides: {{ $latestNews->count() }},
+                                                                                                                    autoSlideInterval: null,
+                                                                                                                    init() { this.startAutoSlide(); },
+                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                                }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
             {{-- Background Slides --}}
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
                 @foreach($latestNews as $index => $news)
-                    {{-- First slide visible by default (SSR), Alpine takes over after load --}}
-                    <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700"
-                        x-transition:enter-start="opacity-0 scale-110" x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0 hero-slide" @if($index === 0)
-                        x-init="$nextTick(() => $el.removeAttribute('style'))" style="display: block;" @else x-cloak @endif>
-                        @if($news->featured_image)
-                            <img src="{{ asset('storage/' . $news->featured_image) }}"
-                                srcset="{{ asset('storage/' . $news->featured_image) }} 1920w" sizes="100vw" alt="{{ $news->title }}"
-                                width="1920" height="1080" class="absolute inset-0 w-full h-full object-cover" @if($index === 0)
-                                loading="eager" fetchpriority="high" decoding="sync" @else loading="lazy" decoding="async" @endif>
-                        @endif
+                    @if($index === 0)
+                        {{-- FIRST SLIDE: Static HTML, no x-show (visible immediately without JS) --}}
+                        <div class="absolute inset-0 hero-slide transition-all duration-500"
+                            :class="currentSlide !== 0 && 'opacity-0 scale-95 pointer-events-none'">
+                            @if($news->featured_image)
+                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
+                                    height="1080" class="absolute inset-0 w-full h-full object-cover" loading="eager" fetchpriority="high"
+                                    decoding="sync">
+                            @endif
 
-                        {{-- Gradient Overlays --}}
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/30"></div>
-                        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/50 via-transparent to-transparent"></div>
+                            {{-- Gradient Overlays --}}
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/30"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/50 via-transparent to-transparent"></div>
 
-                        {{-- Animated Floating Orbs --}}
-                        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div
-                                class="absolute -top-20 -left-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-float-slow">
+                            {{-- Animated Floating Orbs --}}
+                            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                                <div
+                                    class="absolute -top-20 -left-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-float-slow">
+                                </div>
+                                <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-float-slow"
+                                    style="animation-delay: 2s;"></div>
+                                <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-float-slow"
+                                    style="animation-delay: 4s;"></div>
                             </div>
-                            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-float-slow"
-                                style="animation-delay: 2s;"></div>
-                            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-float-slow"
-                                style="animation-delay: 4s;"></div>
                         </div>
-                    </div>
+                    @else
+                        {{-- OTHER SLIDES: Use x-show (hidden until Alpine loads and selects them) --}}
+                        <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700"
+                            x-transition:enter-start="opacity-0 scale-110" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0 hero-slide" x-cloak>
+                            @if($news->featured_image)
+                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
+                                    height="1080" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
+                            @endif
+
+                            {{-- Gradient Overlays --}}
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/30"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/50 via-transparent to-transparent"></div>
+
+                            {{-- Animated Floating Orbs --}}
+                            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                                <div
+                                    class="absolute -top-20 -left-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-float-slow">
+                                </div>
+                                <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-float-slow"
+                                    style="animation-delay: 2s;"></div>
+                                <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-float-slow"
+                                    style="animation-delay: 4s;"></div>
+                            </div>
+                        </div>
+                    @endif
                 @endforeach
             </div>
 
             {{-- Slide Content --}}
             <div class="relative h-full container mx-auto px-4 md:px-6 lg:px-8 flex items-end pb-16 md:pb-24 lg:pb-32">
                 @foreach($latestNews as $index => $news)
-                    <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700 delay-200"
-                        x-transition:enter-start="opacity-0 translate-y-8" x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0 -translate-y-4" class="text-white max-w-3xl" @if($index === 0)
-                        x-init="$nextTick(() => $el.removeAttribute('style'))" style="display: block;" @else x-cloak @endif>
+                    @if($index === 0)
+                        {{-- FIRST SLIDE CONTENT: Static HTML, no x-show --}}
+                        <div class="text-white max-w-3xl transition-all duration-300"
+                            :class="currentSlide !== 0 && 'opacity-0 -translate-y-4 pointer-events-none absolute'">
 
-                        <div class="inline-flex items-center gap-3 mb-4 animate-slide-up" style="animation-delay: 0.3s;">
-                            <span
-                                class="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wider uppercase shadow-lg">
-                                {{ $news->category ?? 'Berita' }}
-                            </span>
-                            <span class="text-sm text-white/70 font-medium">{{ $news->created_at->format('d M Y') }}</span>
+                            <div class="inline-flex items-center gap-3 mb-4 animate-slide-up" style="animation-delay: 0.3s;">
+                                <span
+                                    class="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wider uppercase shadow-lg">
+                                    {{ $news->category ?? 'Berita' }}
+                                </span>
+                                <span class="text-sm text-white/70 font-medium">{{ $news->created_at->format('d M Y') }}</span>
+                            </div>
+
+                            <h2 class="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-5 leading-tight animate-slide-up"
+                                style="animation-delay: 0.4s;">
+                                {{ $news->title }}
+                            </h2>
+
+                            <p class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed animate-slide-up hidden xs:block"
+                                style="animation-delay: 0.5s;">
+                                {{ Str::limit($news->excerpt ?? $news->content, 180) }}
+                            </p>
+
+                            <a href="{{ url('/berita') }}"
+                                class="inline-flex items-center px-5 py-3 md:px-8 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-sm md:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group animate-slide-up"
+                                style="animation-delay: 0.6s;">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
                         </div>
+                    @else
+                        {{-- OTHER SLIDES CONTENT: Use x-show --}}
+                        <div x-show="currentSlide === {{ $index }}"
+                            x-transition:enter="transition ease-out duration-700 delay-200"
+                            x-transition:enter-start="opacity-0 translate-y-8" x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0 -translate-y-4"
+                            class="text-white max-w-3xl"
+                            x-cloak>
 
-                        <h2 class="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-5 leading-tight animate-slide-up"
-                            style="animation-delay: 0.4s;">
-                            {{ $news->title }}
-                        </h2>
+                            <div class="inline-flex items-center gap-3 mb-4">
+                                <span
+                                    class="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wider uppercase shadow-lg">
+                                    {{ $news->category ?? 'Berita' }}
+                                </span>
+                                <span class="text-sm text-white/70 font-medium">{{ $news->created_at->format('d M Y') }}</span>
+                            </div>
 
-                        <p class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed animate-slide-up hidden xs:block"
-                            style="animation-delay: 0.5s;">
-                            {{ Str::limit($news->excerpt ?? $news->content, 180) }}
-                        </p>
+                            <h2 class="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-5 leading-tight">
+                                {{ $news->title }}
+                            </h2>
 
-                        <a href="{{ url('/berita') }}"
-                            class="inline-flex items-center px-5 py-3 md:px-8 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-sm md:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group animate-slide-up"
-                            style="animation-delay: 0.6s;">
-                            Baca Selengkapnya
-                            <svg class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
+                            <p class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed hidden xs:block">
+                                {{ Str::limit($news->excerpt ?? $news->content, 180) }}
+                            </p>
+
+                            <a href="{{ url('/berita') }}"
+                                class="inline-flex items-center px-5 py-3 md:px-8 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-sm md:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    @endif
                 @endforeach
             </div>
 
