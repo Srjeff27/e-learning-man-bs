@@ -57,36 +57,33 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                    currentSlide: 0,
-                                                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                                                    autoSlideInterval: null,
-                                                                                                    init() { this.startAutoSlide(); },
-                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                }"
+                                                                                                            currentSlide: 0,
+                                                                                                            totalSlides: {{ $latestNews->count() }},
+                                                                                                            autoSlideInterval: null,
+                                                                                                            init() { this.startAutoSlide(); },
+                                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                        }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
             {{-- Background Slides --}}
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
                 @foreach($latestNews as $index => $news)
-                    {{-- First slide is visible by default, others are hidden until Alpine loads --}}
+                    {{-- First slide visible by default (SSR), Alpine takes over after load --}}
                     <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700"
                         x-transition:enter-start="opacity-0 scale-110" x-transition:enter-end="opacity-100 scale-100"
                         x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute inset-0 hero-slide {{ $index === 0 ? '' : 'hidden' }}"
-                        :class="{ 'hidden': currentSlide !== {{ $index }} }" @if($index !== 0) x-cloak @endif>
+                        x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0 hero-slide" @if($index === 0)
+                        x-init="$nextTick(() => $el.removeAttribute('style'))" style="display: block;" @else x-cloak @endif>
                         @if($news->featured_image)
                             <img src="{{ asset('storage/' . $news->featured_image) }}"
-                                srcset="{{ asset('storage/' . $news->featured_image) }} 1920w"
-                                sizes="100vw"
-                                alt="{{ $news->title }}" width="1920"
-                                height="1080" class="absolute inset-0 w-full h-full object-cover" @if($index === 0) loading="eager"
-                                fetchpriority="high" decoding="sync" @else loading="lazy" decoding="async" @endif>
+                                srcset="{{ asset('storage/' . $news->featured_image) }} 1920w" sizes="100vw" alt="{{ $news->title }}"
+                                width="1920" height="1080" class="absolute inset-0 w-full h-full object-cover" @if($index === 0)
+                                loading="eager" fetchpriority="high" decoding="sync" @else loading="lazy" decoding="async" @endif>
                         @endif
 
                         {{-- Gradient Overlays --}}
@@ -113,7 +110,8 @@
                     <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700 delay-200"
                         x-transition:enter-start="opacity-0 translate-y-8" x-transition:enter-end="opacity-100 translate-y-0"
                         x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0 -translate-y-4" class="text-white max-w-3xl">
+                        x-transition:leave-end="opacity-0 -translate-y-4" class="text-white max-w-3xl" @if($index === 0)
+                        x-init="$nextTick(() => $el.removeAttribute('style'))" style="display: block;" @else x-cloak @endif>
 
                         <div class="inline-flex items-center gap-3 mb-4 animate-slide-up" style="animation-delay: 0.3s;">
                             <span
@@ -484,9 +482,8 @@
                             @if($news->featured_image)
                                 <img src="{{ asset('storage/' . $news->featured_image) }}"
                                     srcset="{{ asset('storage/' . $news->featured_image) }} 640w"
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    alt="{{ $news->title }}" width="640"
-                                    height="360"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="{{ $news->title }}"
+                                    width="640" height="360"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     loading="lazy">
                             @endif
