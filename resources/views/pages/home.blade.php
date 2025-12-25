@@ -57,16 +57,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                                    currentSlide: 0,
-                                                                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                                                                    autoSlideInterval: null,
-                                                                                                                    init() { this.startAutoSlide(); },
-                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                                }"
+                                                                                                                            currentSlide: 0,
+                                                                                                                            totalSlides: {{ $latestNews->count() }},
+                                                                                                                            autoSlideInterval: null,
+                                                                                                                            init() { this.startAutoSlide(); },
+                                                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                                        }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
@@ -78,9 +78,14 @@
                         <div class="absolute inset-0 hero-slide transition-all duration-500"
                             :class="currentSlide !== 0 && 'opacity-0 scale-95 pointer-events-none'">
                             @if($news->featured_image)
-                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
-                                    height="1080" class="absolute inset-0 w-full h-full object-cover" loading="eager" fetchpriority="high"
-                                    decoding="sync">
+                                <picture>
+                                    <source media="(max-width: 639px)" srcset="{{ asset('storage/' . $news->featured_image) }}?w=640">
+                                    <source media="(min-width: 640px) and (max-width: 1023px)"
+                                        srcset="{{ asset('storage/' . $news->featured_image) }}?w=1024">
+                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
+                                        height="1080" class="absolute inset-0 w-full h-full object-cover" loading="eager"
+                                        fetchpriority="high" decoding="sync">
+                                </picture>
                             @endif
 
                             {{-- Gradient Overlays --}}
@@ -105,8 +110,13 @@
                             x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
                             x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0 hero-slide" x-cloak>
                             @if($news->featured_image)
-                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
-                                    height="1080" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
+                                <picture>
+                                    <source media="(max-width: 639px)" srcset="{{ asset('storage/' . $news->featured_image) }}?w=640">
+                                    <source media="(min-width: 640px) and (max-width: 1023px)"
+                                        srcset="{{ asset('storage/' . $news->featured_image) }}?w=1024">
+                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
+                                        height="1080" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
+                                </picture>
                             @endif
 
                             {{-- Gradient Overlays --}}
@@ -167,13 +177,10 @@
                         </div>
                     @else
                         {{-- OTHER SLIDES CONTENT: Use x-show --}}
-                        <div x-show="currentSlide === {{ $index }}"
-                            x-transition:enter="transition ease-out duration-700 delay-200"
+                        <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700 delay-200"
                             x-transition:enter-start="opacity-0 translate-y-8" x-transition:enter-end="opacity-100 translate-y-0"
                             x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0 -translate-y-4"
-                            class="text-white max-w-3xl"
-                            x-cloak>
+                            x-transition:leave-end="opacity-0 -translate-y-4" class="text-white max-w-3xl" x-cloak>
 
                             <div class="inline-flex items-center gap-3 mb-4">
                                 <span
@@ -187,7 +194,8 @@
                                 {{ $news->title }}
                             </h2>
 
-                            <p class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed hidden xs:block">
+                            <p
+                                class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed hidden xs:block">
                                 {{ Str::limit($news->excerpt ?? $news->content, 180) }}
                             </p>
 
