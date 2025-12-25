@@ -41,7 +41,7 @@
                                 </svg>
                             </a>
                         @endif
-                        <button type="button" @click="showBanner = false"
+                        <button type="button" @click="showBanner = false" aria-label="Tutup Pengumuman"
                             class="p-1 hover:bg-white/20 rounded transition-colors focus:outline-none">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,16 +57,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                            currentSlide: 0,
-                                                                                            totalSlides: {{ $latestNews->count() }},
-                                                                                            autoSlideInterval: null,
-                                                                                            init() { this.startAutoSlide(); },
-                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                        }"
+                                                                                                    currentSlide: 0,
+                                                                                                    totalSlides: {{ $latestNews->count() }},
+                                                                                                    autoSlideInterval: null,
+                                                                                                    init() { this.startAutoSlide(); },
+                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
@@ -81,7 +81,10 @@
                         class="absolute inset-0 hero-slide {{ $index === 0 ? '' : 'hidden' }}"
                         :class="{ 'hidden': currentSlide !== {{ $index }} }" @if($index !== 0) x-cloak @endif>
                         @if($news->featured_image)
-                            <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
+                            <img src="{{ asset('storage/' . $news->featured_image) }}"
+                                srcset="{{ asset('storage/' . $news->featured_image) }} 1920w"
+                                sizes="100vw"
+                                alt="{{ $news->title }}" width="1920"
                                 height="1080" class="absolute inset-0 w-full h-full object-cover" @if($index === 0) loading="eager"
                                 fetchpriority="high" decoding="sync" @else loading="lazy" decoding="async" @endif>
                         @endif
@@ -147,7 +150,7 @@
             {{-- Slide Indicators (swipe to navigate) --}}
             <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
                 @for($i = 0; $i < $latestNews->count(); $i++)
-                    <button type="button" @click="goToSlide({{ $i }})"
+                    <button type="button" @click="goToSlide({{ $i }})" aria-label="Lihat slide {{ $i + 1 }}"
                         :class="currentSlide === {{ $i }} ? 'w-10 bg-white shadow-lg shadow-white/30' : 'w-3 bg-white/40 hover:bg-white/60'"
                         class="h-3 rounded-full transition-all duration-500 focus:outline-none"></button>
                 @endfor
@@ -479,7 +482,10 @@
                         style="animation-delay: {{ 0.1 * ($index + 1) }}s;">
                         <div class="relative aspect-video bg-gradient-to-br from-blue-500 to-cyan-500 overflow-hidden">
                             @if($news->featured_image)
-                                <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="640"
+                                <img src="{{ asset('storage/' . $news->featured_image) }}"
+                                    srcset="{{ asset('storage/' . $news->featured_image) }} 640w"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    alt="{{ $news->title }}" width="640"
                                     height="360"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     loading="lazy">

@@ -157,8 +157,8 @@
                 @auth
                     <a href="{{ url('/dashboard') }}"
                         class="hidden lg:inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-                                                                      text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
-                                                                      transition-all duration-300 transform hover:-translate-y-0.5">
+                                                                          text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
+                                                                          transition-all duration-300 transform hover:-translate-y-0.5">
                         Dashboard
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -169,20 +169,21 @@
                     <div class="hidden lg:flex items-center space-x-3">
                         <a href="{{ route('login') }}"
                             class="px-5 py-2.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 
-                                                                           transition-all duration-300 hover:-translate-y-0.5">
+                                                                               transition-all duration-300 hover:-translate-y-0.5">
                             Masuk
                         </a>
                         <a href="{{ route('register') }}"
                             class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-                                                                          text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
-                                                                          transition-all duration-300 transform hover:-translate-y-0.5">
+                                                                              text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 
+                                                                              transition-all duration-300 transform hover:-translate-y-0.5">
                             Daftar
                         </a>
                     </div>
                 @endauth
 
                 <!-- Mobile menu button -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen"
+                <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Buka Menu Navigasi"
+                    :aria-expanded="mobileMenuOpen"
                     class="lg:hidden p-2.5 rounded-xl bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-slate-800/50 
                            border border-blue-100/50 dark:border-blue-900/30 shadow-sm hover:shadow-md transition-all duration-300">
                     <div class="relative w-6 h-6">
