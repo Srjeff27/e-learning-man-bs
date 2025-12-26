@@ -57,16 +57,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                                                    currentSlide: 0,
-                                                                                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                                                                                    autoSlideInterval: null,
-                                                                                                                                    init() { this.startAutoSlide(); },
-                                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                                                }"
+                                                                                                                                                                    currentSlide: 0,
+                                                                                                                                                                    totalSlides: {{ $latestNews->count() }},
+                                                                                                                                                                    autoSlideInterval: null,
+                                                                                                                                                                    init() { this.startAutoSlide(); },
+                                                                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 3500); },
+                                                                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                                                                                }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
@@ -146,7 +146,7 @@
                         <div class="text-white max-w-3xl transition-all duration-300"
                             :class="currentSlide !== 0 && 'opacity-0 -translate-y-4 pointer-events-none absolute'">
 
-                            <div class="inline-flex items-center gap-3 mb-4 animate-slide-up" style="animation-delay: 0.3s;">
+                            <div class="inline-flex items-center gap-3 mb-4">
                                 <span
                                     class="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wider uppercase shadow-lg">
                                     {{ $news->category ?? 'Berita' }}
@@ -154,19 +154,17 @@
                                 <span class="text-sm text-white/70 font-medium">{{ $news->created_at->format('d M Y') }}</span>
                             </div>
 
-                            <h2 class="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-5 leading-tight animate-slide-up"
-                                style="animation-delay: 0.4s;">
+                            <h2 class="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-5 leading-tight">
                                 {{ $news->title }}
                             </h2>
 
-                            <p class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed animate-slide-up hidden xs:block"
-                                style="animation-delay: 0.5s;">
+                            <p
+                                class="text-sm xs:text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-2xl leading-relaxed hidden xs:block">
                                 {{ Str::limit($news->excerpt ?? $news->content, 180) }}
                             </p>
 
                             <a href="{{ url('/berita') }}"
-                                class="inline-flex items-center px-5 py-3 md:px-8 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-sm md:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group animate-slide-up"
-                                style="animation-delay: 0.6s;">
+                                class="inline-flex items-center px-5 py-3 md:px-8 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-sm md:text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group">
                                 Baca Selengkapnya
                                 <svg class="w-5 h-5 ml-3 group-hover:translate-x-2 transition-transform duration-300" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -550,10 +548,11 @@
                             @if($news->featured_image)
                                 <picture>
                                     @if($news->featured_image_mobile)
-                                        <source media="(max-width: 768px)" srcset="{{ asset('storage/' . $news->featured_image_mobile) }}">
+                                        <source media="(max-width: 768px)"
+                                            srcset="{{ asset('storage/' . $news->featured_image_mobile) }}">
                                     @endif
-                                    <img src="{{ asset('storage/' . $news->featured_image) }}"
-                                        alt="{{ $news->title }}" width="640" height="360"
+                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="640"
+                                        height="360"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                         loading="lazy">
                                 </picture>
@@ -676,12 +675,8 @@
                 background-position: 0% 50%;
             }
 
-            50% {
-                background-position: 100% 50%;
-            }
-
             100% {
-                background-position: 0% 50%;
+                background-position: 200% 50%;
             }
         }
 
@@ -697,17 +692,7 @@
             }
         }
 
-        @keyframes pulse-glow {
 
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-
-            50% {
-                box-shadow: 0 0 50px rgba(59, 130, 246, 0.6), 0 0 80px rgba(6, 182, 212, 0.3);
-            }
-        }
 
         /* ==================== ANIMATION CLASSES ==================== */
         .animate-fade-up {
@@ -734,16 +719,14 @@
 
         .animate-gradient {
             background-size: 200% 200%;
-            animation: gradient-shift 6s ease infinite;
+            animation: gradient-shift 3s linear infinite;
         }
 
         .animate-bounce-subtle {
             animation: bounce-subtle 2.5s ease-in-out infinite;
         }
 
-        .animate-pulse-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
+
 
         /* ==================== GLASS MORPHISM ==================== */
         .glass-card {
@@ -810,7 +793,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient-shift 5s ease infinite;
+            animation: gradient-shift 3s linear infinite;
         }
 
         .dark .gradient-text {
