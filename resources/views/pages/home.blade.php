@@ -5,8 +5,16 @@
 
 @push('preload')
     @if(isset($latestNews) && $latestNews->first() && $latestNews->first()->featured_image)
-        <link rel="preload" href="{{ asset('storage/' . $latestNews->first()->featured_image) }}" as="image"
-            fetchpriority="high">
+        @php $firstNews = $latestNews->first(); @endphp
+
+        @if($firstNews->featured_image_mobile)
+            <link rel="preload" as="image" href="{{ asset('storage/' . $firstNews->featured_image_mobile) }}"
+                media="(max-width: 768px)" fetchpriority="high">
+            <link rel="preload" as="image" href="{{ asset('storage/' . $firstNews->featured_image) }}" media="(min-width: 769px)"
+                fetchpriority="high">
+        @else
+            <link rel="preload" href="{{ asset('storage/' . $firstNews->featured_image) }}" as="image" fetchpriority="high">
+        @endif
     @endif
 @endpush
 
@@ -57,16 +65,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                                                                                    currentSlide: 0,
-                                                                                                                                                                    totalSlides: {{ $latestNews->count() }},
-                                                                                                                                                                    autoSlideInterval: null,
-                                                                                                                                                                    init() { this.startAutoSlide(); },
-                                                                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 3500); },
-                                                                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                                                                                }"
+                                                                                                                                                                            currentSlide: 0,
+                                                                                                                                                                            totalSlides: {{ $latestNews->count() }},
+                                                                                                                                                                            autoSlideInterval: null,
+                                                                                                                                                                            init() { this.startAutoSlide(); },
+                                                                                                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 3500); },
+                                                                                                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                                                                                        }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
