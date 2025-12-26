@@ -57,16 +57,16 @@
     {{-- Hero Slider --}}
     @if($latestNews->count() > 0)
         <div x-data="{
-                                                                                                                            currentSlide: 0,
-                                                                                                                            totalSlides: {{ $latestNews->count() }},
-                                                                                                                            autoSlideInterval: null,
-                                                                                                                            init() { this.startAutoSlide(); },
-                                                                                                                            startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
-                                                                                                                            stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
-                                                                                                                            nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
-                                                                                                                            prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
-                                                                                                                            goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                                                        }"
+                                                                                                                                    currentSlide: 0,
+                                                                                                                                    totalSlides: {{ $latestNews->count() }},
+                                                                                                                                    autoSlideInterval: null,
+                                                                                                                                    init() { this.startAutoSlide(); },
+                                                                                                                                    startAutoSlide() { this.autoSlideInterval = setInterval(() => { this.nextSlide(); }, 5000); },
+                                                                                                                                    stopAutoSlide() { if(this.autoSlideInterval) clearInterval(this.autoSlideInterval); },
+                                                                                                                                    nextSlide() { this.currentSlide = (this.currentSlide + 1) % this.totalSlides; },
+                                                                                                                                    prevSlide() { this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides; },
+                                                                                                                                    goToSlide(index) { this.currentSlide = index; this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                                                                }"
             class="relative h-[350px] xs:h-[400px] md:h-[550px] lg:h-[650px] overflow-hidden" @mouseenter="stopAutoSlide()"
             @mouseleave="startAutoSlide()">
 
@@ -79,9 +79,9 @@
                             :class="currentSlide !== 0 && 'opacity-0 scale-95 pointer-events-none'">
                             @if($news->featured_image)
                                 <picture>
-                                    <source media="(max-width: 639px)" srcset="{{ asset('storage/' . $news->featured_image) }}?w=640">
-                                    <source media="(min-width: 640px) and (max-width: 1023px)"
-                                        srcset="{{ asset('storage/' . $news->featured_image) }}?w=1024">
+                                    @if($news->featured_image_mobile)
+                                        <source media="(max-width: 768px)" srcset="{{ asset('storage/' . $news->featured_image_mobile) }}">
+                                    @endif
                                     <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
                                         height="1080" class="absolute inset-0 w-full h-full object-cover" loading="eager"
                                         fetchpriority="high" decoding="sync">
@@ -111,9 +111,9 @@
                             x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0 hero-slide" x-cloak>
                             @if($news->featured_image)
                                 <picture>
-                                    <source media="(max-width: 639px)" srcset="{{ asset('storage/' . $news->featured_image) }}?w=640">
-                                    <source media="(min-width: 640px) and (max-width: 1023px)"
-                                        srcset="{{ asset('storage/' . $news->featured_image) }}?w=1024">
+                                    @if($news->featured_image_mobile)
+                                        <source media="(max-width: 768px)" srcset="{{ asset('storage/' . $news->featured_image_mobile) }}">
+                                    @endif
                                     <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" width="1920"
                                         height="1080" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
                                 </picture>
@@ -548,12 +548,15 @@
                         style="animation-delay: {{ 0.1 * ($index + 1) }}s;">
                         <div class="relative aspect-video bg-gradient-to-br from-blue-500 to-cyan-500 overflow-hidden">
                             @if($news->featured_image)
-                                <img src="{{ asset('storage/' . $news->featured_image) }}"
-                                    srcset="{{ asset('storage/' . $news->featured_image) }} 640w"
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="{{ $news->title }}"
-                                    width="640" height="360"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                    loading="lazy">
+                                <picture>
+                                    @if($news->featured_image_mobile)
+                                        <source media="(max-width: 768px)" srcset="{{ asset('storage/' . $news->featured_image_mobile) }}">
+                                    @endif
+                                    <img src="{{ asset('storage/' . $news->featured_image) }}"
+                                        alt="{{ $news->title }}" width="640" height="360"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                        loading="lazy">
+                                </picture>
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent">
                             </div>

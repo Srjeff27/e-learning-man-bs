@@ -24,9 +24,9 @@
                 <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                     @if($article->category)
                         <span class="badge text-[10px] sm:text-xs
-                                    @if($article->category === 'Akademik') badge-success
-                                    @elseif($article->category === 'Pengumuman') badge-warning
-                                    @else badge-primary @endif">
+                                            @if($article->category === 'Akademik') badge-success
+                                            @elseif($article->category === 'Pengumuman') badge-warning
+                                            @else badge-primary @endif">
                             {{ $article->category }}
                         </span>
                     @endif
@@ -48,8 +48,13 @@
                 <!-- Featured Image -->
                 @if($article->featured_image)
                     <div class="aspect-video rounded-xl sm:rounded-2xl overflow-hidden mb-6 sm:mb-10">
-                        <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
-                            class="w-full h-full object-cover">
+                        <picture>
+                            @if($article->featured_image_mobile)
+                                <source media="(max-width: 768px)" srcset="{{ Storage::url($article->featured_image_mobile) }}">
+                            @endif
+                            <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
+                                class="w-full h-full object-cover">
+                        </picture>
                     </div>
                 @endif
 
@@ -68,7 +73,8 @@
                         </div>
                         <div>
                             <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                                {{ $article->author->name }}</p>
+                                {{ $article->author->name }}
+                            </p>
                             <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Penulis</p>
                         </div>
                     </div>
@@ -98,8 +104,13 @@
                         <a href="{{ route('berita.show', $related->slug) }}" class="glass-card overflow-hidden group">
                             <div class="aspect-video relative overflow-hidden">
                                 @if($related->featured_image)
-                                    <img src="{{ Storage::url($related->featured_image) }}" alt="{{ $related->title }}"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <picture>
+                                        @if($related->featured_image_mobile)
+                                            <source media="(max-width: 768px)" srcset="{{ Storage::url($related->featured_image_mobile) }}">
+                                        @endif
+                                        <img src="{{ Storage::url($related->featured_image) }}" alt="{{ $related->title }}"
+                                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    </picture>
                                 @else
                                     <div class="w-full h-full bg-gradient-to-br from-blue-500 to-cyan-500"></div>
                                 @endif

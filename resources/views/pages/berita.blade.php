@@ -55,9 +55,14 @@
                         <article class="glass-card overflow-hidden group">
                             <div class="aspect-video relative overflow-hidden">
                                 @if($item->featured_image)
-                                    <img src="{{ Storage::url($item->featured_image) }}" alt="{{ $item->title }}" loading="lazy"
-                                        width="640" height="360"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <picture>
+                                        @if($item->featured_image_mobile)
+                                            <source media="(max-width: 768px)" srcset="{{ Storage::url($item->featured_image_mobile) }}">
+                                        @endif
+                                        <img src="{{ Storage::url($item->featured_image) }}" alt="{{ $item->title }}" loading="lazy"
+                                            width="640" height="360"
+                                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    </picture>
                                 @else
                                     @php
                                         $colors = ['from-blue-500 to-cyan-500', 'from-indigo-500 to-purple-500', 'from-emerald-500 to-teal-500', 'from-rose-500 to-pink-500', 'from-amber-500 to-orange-500'];
@@ -68,9 +73,9 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
                                 @if($item->category)
                                     <span class="absolute top-2 sm:top-4 left-2 sm:left-4 badge text-[10px] sm:text-xs
-                                                                        @if($item->category === 'Akademik') badge-success
-                                                                        @elseif($item->category === 'Pengumuman') badge-warning
-                                                                        @else badge-primary @endif">
+                                                                                        @if($item->category === 'Akademik') badge-success
+                                                                                        @elseif($item->category === 'Pengumuman') badge-warning
+                                                                                        @else badge-primary @endif">
                                         {{ $item->category }}
                                     </span>
                                 @endif

@@ -17,6 +17,7 @@ class News extends Model
         'excerpt',
         'content',
         'featured_image',
+        'featured_image_mobile',
         'author_id',
         'category',
         'is_published',

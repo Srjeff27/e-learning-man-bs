@@ -47,20 +47,19 @@ class GalleryController extends Controller
             $file = $request->file('file');
 
             if ($validated['type'] === 'photo' && $this->isImage($file)) {
-                // Convert to WebP for photos
-                $validated['file_path'] = $this->imageService
-                    ->setQuality(85)
-                    ->setMaxDimensions(1920, 1080)
-                    ->optimizeAndStore($file, 'galleries');
+                // Convert to WebP (desktop + mobile versions)
+                $images = $this->imageService->optimizeAndStoreResponsive($file, 'galleries');
+                $validated['file_path'] = $images['desktop'];
+                $validated['file_path_mobile'] = $images['mobile'];
 
-                // Create thumbnail
+                // Create thumbnail from desktop version
                 $validated['thumbnail'] = $this->imageService
                     ->setQuality(80)
                     ->createThumbnail($validated['file_path'], 'galleries/thumbnails', 400, 300);
 
-                // If thumbnail creation failed, use original
+                // If thumbnail creation failed, use mobile version as fallback
                 if (!$validated['thumbnail']) {
-                    $validated['thumbnail'] = $validated['file_path'];
+                    $validated['thumbnail'] = $validated['file_path_mobile'] ?? $validated['file_path'];
                 }
             } else {
                 // Store video or non-image files as-is
@@ -93,28 +92,31 @@ class GalleryController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
 
-            // Delete old files
+            // Delete old files (desktop, mobile, thumbnail)
             if ($gallery->file_path) {
                 Storage::disk('public')->delete($gallery->file_path);
+            }
+            if ($gallery->file_path_mobile) {
+                Storage::disk('public')->delete($gallery->file_path_mobile);
             }
             if ($gallery->thumbnail && $gallery->thumbnail !== $gallery->file_path) {
                 Storage::disk('public')->delete($gallery->thumbnail);
             }
 
             if ($gallery->type === 'photo' && $this->isImage($file)) {
-                // Convert to WebP for photos
-                $validated['file_path'] = $this->imageService
-                    ->setQuality(85)
-                    ->setMaxDimensions(1920, 1080)
-                    ->optimizeAndStore($file, 'galleries');
+                // Convert to WebP (desktop + mobile versions)
+                $images = $this->imageService->optimizeAndStoreResponsive($file, 'galleries');
+                $validated['file_path'] = $images['desktop'];
+                $validated['file_path_mobile'] = $images['mobile'];
 
-                // Create thumbnail
+                // Create thumbnail from desktop version
                 $validated['thumbnail'] = $this->imageService
                     ->setQuality(80)
                     ->createThumbnail($validated['file_path'], 'galleries/thumbnails', 400, 300);
 
+                // If thumbnail creation failed, use mobile version as fallback
                 if (!$validated['thumbnail']) {
-                    $validated['thumbnail'] = $validated['file_path'];
+                    $validated['thumbnail'] = $validated['file_path_mobile'] ?? $validated['file_path'];
                 }
             } else {
                 $validated['file_path'] = $file->store('galleries', 'public');
@@ -128,9 +130,12 @@ class GalleryController extends Controller
 
     public function destroy(Gallery $gallery)
     {
-        // Delete files
+        // Delete files (desktop, mobile, thumbnail)
         if ($gallery->file_path) {
             Storage::disk('public')->delete($gallery->file_path);
+        }
+        if ($gallery->file_path_mobile) {
+            Storage::disk('public')->delete($gallery->file_path_mobile);
         }
         if ($gallery->thumbnail && $gallery->thumbnail !== $gallery->file_path) {
             Storage::disk('public')->delete($gallery->thumbnail);

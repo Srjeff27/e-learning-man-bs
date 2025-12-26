@@ -103,6 +103,149 @@ class ImageOptimizationService
     }
 
     /**
+     * Convert and optimize an uploaded image to responsive WebP formats (desktop + mobile)
+     *
+     * @param UploadedFile $file The uploaded file
+     * @param string $directory Storage directory (e.g., 'news', 'galleries')
+     * @param string $disk Storage disk (default: 'public')
+     * @return array{desktop: string|null, mobile: string|null} Paths to desktop and mobile images
+     */
+    public function optimizeAndStoreResponsive(UploadedFile $file, string $directory, string $disk = 'public'): array
+    {
+        $result = [
+            'desktop' => null,
+            'mobile' => null,
+        ];
+
+        try {
+            // Check if file is an image
+            if (!$this->isImage($file)) {
+                // Not an image, store as-is (only desktop)
+                $result['desktop'] = $file->store($directory, $disk);
+                return $result;
+            }
+
+            // Get image info
+            $mimeType = $file->getMimeType();
+            $tempPath = $file->getRealPath();
+
+            // Create image resource based on mime type
+            $originalImage = $this->createImageFromFile($tempPath, $mimeType);
+
+            if (!$originalImage) {
+                // Fallback to regular storage
+                $result['desktop'] = $file->store($directory, $disk);
+                return $result;
+            }
+
+            // Generate base filename
+            $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $baseName = Str::slug($baseName);
+            $timestamp = now()->format('Ymd_His');
+            $random = Str::random(6);
+
+            // ========== DESKTOP VERSION (1920px, quality 85%) ==========
+            $desktopImage = $this->createImageFromFile($tempPath, $mimeType);
+            $desktopImage = $this->resizeImageToMaxWidth($desktopImage, 1920);
+
+            $desktopFilename = "{$baseName}_{$timestamp}_{$random}_desktop.webp";
+            $desktopPath = $directory . '/' . $desktopFilename;
+
+            ob_start();
+            imagewebp($desktopImage, null, 85);
+            $desktopData = ob_get_clean();
+            imagedestroy($desktopImage);
+
+            Storage::disk($disk)->put($desktopPath, $desktopData);
+            $result['desktop'] = $desktopPath;
+
+            // ========== MOBILE VERSION (768px, quality 75%) ==========
+            $mobileImage = $this->createImageFromFile($tempPath, $mimeType);
+            $mobileImage = $this->resizeImageToMaxWidth($mobileImage, 768);
+
+            $mobileFilename = "{$baseName}_{$timestamp}_{$random}_mobile.webp";
+            $mobilePath = $directory . '/' . $mobileFilename;
+
+            ob_start();
+            imagewebp($mobileImage, null, 75);
+            $mobileData = ob_get_clean();
+            imagedestroy($mobileImage);
+
+            Storage::disk($disk)->put($mobilePath, $mobileData);
+            $result['mobile'] = $mobilePath;
+
+            // Free original image memory
+            imagedestroy($originalImage);
+
+            \Log::info('Responsive images created', [
+                'desktop' => $desktopPath,
+                'mobile' => $mobilePath,
+                'desktop_size' => strlen($desktopData),
+                'mobile_size' => strlen($mobileData),
+            ]);
+
+            return $result;
+
+        } catch (\Exception $e) {
+            \Log::error('Responsive image optimization failed', [
+                'error' => $e->getMessage(),
+                'file' => $file->getClientOriginalName(),
+            ]);
+
+            // Fallback to regular storage
+            $result['desktop'] = $file->store($directory, $disk);
+            return $result;
+        }
+    }
+
+    /**
+     * Resize image to maximum width while maintaining aspect ratio
+     */
+    protected function resizeImageToMaxWidth($image, int $maxWidth)
+    {
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // No resize needed if already smaller
+        if ($originalWidth <= $maxWidth) {
+            return $image;
+        }
+
+        $ratio = $maxWidth / $originalWidth;
+        $newWidth = $maxWidth;
+        $newHeight = (int) ($originalHeight * $ratio);
+
+        // Create new image with new dimensions
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Preserve transparency
+        imagealphablending($newImage, false);
+        imagesavealpha($newImage, true);
+        $transparent = imagecolorallocatealpha($newImage, 255, 255, 255, 127);
+        imagefilledrectangle($newImage, 0, 0, $newWidth, $newHeight, $transparent);
+
+        // Resize
+        imagecopyresampled(
+            $newImage,
+            $image,
+            0,
+            0,
+            0,
+            0,
+            $newWidth,
+            $newHeight,
+            $originalWidth,
+            $originalHeight
+        );
+
+        // Free original image memory
+        imagedestroy($image);
+
+        return $newImage;
+    }
+
+
+    /**
      * Check if file is an image
      */
     protected function isImage(UploadedFile $file): bool

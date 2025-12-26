@@ -15,6 +15,7 @@ class Gallery extends Model
         'description',
         'type',
         'file_path',
+        'file_path_mobile',
         'thumbnail',
         'category',
         'is_featured',

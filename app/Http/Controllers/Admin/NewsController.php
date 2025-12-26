@@ -46,12 +46,14 @@ class NewsController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
         $validated['published_at'] = $validated['is_published'] ? now() : null;
 
-        // Convert image to WebP
+        // Convert image to WebP (desktop + mobile versions)
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $this->imageService
-                ->setQuality(85)
-                ->setMaxDimensions(1920, 1080)
-                ->optimizeAndStore($request->file('featured_image'), 'news');
+            $images = $this->imageService->optimizeAndStoreResponsive(
+                $request->file('featured_image'),
+                'news'
+            );
+            $validated['featured_image'] = $images['desktop'];
+            $validated['featured_image_mobile'] = $images['mobile'];
         }
 
         News::create($validated);
@@ -82,17 +84,22 @@ class NewsController extends Controller
             $validated['published_at'] = now();
         }
 
-        // Convert image to WebP
+        // Convert image to WebP (desktop + mobile versions)
         if ($request->hasFile('featured_image')) {
-            // Delete old image
+            // Delete old images
             if ($news->featured_image) {
                 Storage::disk('public')->delete($news->featured_image);
             }
+            if ($news->featured_image_mobile) {
+                Storage::disk('public')->delete($news->featured_image_mobile);
+            }
 
-            $validated['featured_image'] = $this->imageService
-                ->setQuality(85)
-                ->setMaxDimensions(1920, 1080)
-                ->optimizeAndStore($request->file('featured_image'), 'news');
+            $images = $this->imageService->optimizeAndStoreResponsive(
+                $request->file('featured_image'),
+                'news'
+            );
+            $validated['featured_image'] = $images['desktop'];
+            $validated['featured_image_mobile'] = $images['mobile'];
         }
 
         $news->update($validated);
@@ -109,9 +116,12 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
-        // Delete image file
+        // Delete image files (desktop + mobile)
         if ($news->featured_image) {
             Storage::disk('public')->delete($news->featured_image);
+        }
+        if ($news->featured_image_mobile) {
+            Storage::disk('public')->delete($news->featured_image_mobile);
         }
 
         $news->delete();
