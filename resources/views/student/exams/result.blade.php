@@ -3,63 +3,77 @@
 @section('title', 'Hasil Ujian')
 
 @section('content')
-    <div class="max-w-2xl mx-auto text-center space-y-8 pt-10">
+    <div class="max-w-2xl mx-auto space-y-8 animate-fade-in-up py-8">
         <div
-            class="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-        </div>
-
-        <div>
-            <h2 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">Ujian Selesai!</h2>
-            <p class="text-slate-500 dark:text-slate-400">Terima kasih telah mengerjakan ujian.</p>
-        </div>
-
-        <div
-            class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-slate-700 p-8 shadow-2xl transform hover:scale-105 transition-transform duration-500">
-            <p class="text-sm font-semibold uppercase tracking-widest text-slate-500 mb-2">Nilai Akhir Anda</p>
+            class="relative bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden p-8 text-center ring-8 ring-slate-50 dark:ring-slate-900">
+            <!-- Decorative Confetti bg -->
             <div
-                class="text-6xl font-black bg-gradient-to-r from-emerald-500 to-green-600 bg-clip-text text-transparent mb-4">
-                {{ $attempt->score }}
+                class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.05]">
             </div>
 
-            @php
-                $correct = $attempt->answers->where('is_correct', true)->count();
-                $total = $exam->questions->count();
-                $wrong = $total - $correct;
-            @endphp
+            <!-- Medal/Icon -->
+            <div
+                class="relative z-10 mx-auto w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-6 animate-bounce-slow">
+                @if($score >= 75)
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-white">
+                        <circle cx="12" cy="8" r="7" />
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                    </svg>
+                @else
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-white">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M16 16s-1.5-2-4-2-4 2-4 2" />
+                        <line x1="9" y1="9" x2="9.01" y2="9" />
+                        <line x1="15" y1="9" x2="15.01" y2="9" />
+                    </svg>
+                @endif
+            </div>
 
-            <div class="flex justify-center gap-4 mb-4">
+            <h2 class="relative z-10 text-3xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
+                {{ $score >= 75 ? 'Selamat! Hasil Memuaskan' : 'Ujian Selesai' }}
+            </h2>
+            <p class="relative z-10 text-slate-500 dark:text-slate-400 mb-8">
+                Anda telah menyelesaikan ujian <strong>{{ $exam->title }}</strong>.
+            </p>
+
+            <!-- Score Card -->
+            <div
+                class="relative z-10 bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-600 mb-8">
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Nilai Akhir Anda</p>
                 <div
-                    class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800">
-                    <span class="block text-xs uppercase text-emerald-600 font-bold">Benar</span>
-                    <span class="text-xl font-bold text-emerald-500">{{ $correct }}</span>
-                </div>
-                <div class="px-4 py-2 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800">
-                    <span class="block text-xs uppercase text-red-600 font-bold">Salah</span>
-                    <span class="text-xl font-bold text-red-500">{{ $wrong }}</span>
+                    class="text-6xl font-black {{ $score >= 75 ? 'text-emerald-500' : 'text-slate-700 dark:text-white' }} tracking-tighter">
+                    {{ $score }}
                 </div>
             </div>
-            <div class="mt-6 flex justify-center gap-8 text-sm">
-                <div>
-                    <span class="block text-slate-400">Mulai</span>
-                    <span
-                        class="font-bold text-slate-700 dark:text-slate-300">{{ $attempt->started_at->format('H:i') }}</span>
-                </div>
-                <div>
-                    <span class="block text-slate-400">Selesai</span>
-                    <span
-                        class="font-bold text-slate-700 dark:text-slate-300">{{ $attempt->submitted_at->format('H:i') }}</span>
-                </div>
-            </div>
-        </div>
 
-        <div>
+            <!-- Stats Grid -->
+            <div class="relative z-10 grid grid-cols-3 gap-4 mb-8">
+                <div
+                    class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+                    <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Benar</p>
+                    <p class="text-2xl font-black text-emerald-600 dark:text-emerald-400">{{ $correct }}</p>
+                </div>
+                <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-900/50">
+                    <p class="text-xs font-bold text-red-600 dark:text-red-400 uppercase">Salah</p>
+                    <p class="text-2xl font-black text-red-600 dark:text-red-400">{{ $wrong }}</p>
+                </div>
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-600">
+                    <p class="text-xs font-bold text-slate-500 uppercase">Pelanggaran</p>
+                    <p class="text-2xl font-black text-slate-700 dark:text-white">{{ $attempt->violation_count }}</p>
+                </div>
+            </div>
+
             <a href="{{ route('student.exams.index') }}"
-                class="px-8 py-3 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                class="relative z-10 inline-flex items-center gap-2 px-8 py-3 bg-slate-800 dark:bg-white text-white dark:text-slate-800 rounded-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
                 Kembali ke Daftar Ujian
             </a>
         </div>

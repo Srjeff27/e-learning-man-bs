@@ -3,117 +3,132 @@
 @section('title', 'Daftar Ujian')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="space-y-8 animate-fade-in-up">
         <!-- Header -->
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Daftar Ujian</h2>
-            <p class="text-slate-500 dark:text-slate-400">Kerjakan ujian yang tersedia untuk kelas Anda.</p>
+        <div
+            class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 p-8 text-white shadow-2xl shadow-emerald-500/30">
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl"></div>
+
+            <div class="relative z-10">
+                <h2 class="text-3xl font-extrabold tracking-tight mb-2">Ujian Tersedia</h2>
+                <p class="text-emerald-100/90 text-lg font-light">Kerjakan ujian dengan jujur dan teliti.</p>
+            </div>
         </div>
 
-        @if(session('info'))
-            <div class="p-4 bg-blue-100 text-blue-700 rounded-xl border border-blue-200">
-                {{ session('info') }}
-            </div>
-        @endif
-
         @if(session('error'))
-            <div class="p-4 bg-red-100 text-red-700 rounded-xl border border-red-200">
-                {{ session('error') }}
+            <div
+                class="p-4 bg-red-100/80 backdrop-blur-md text-red-700 rounded-2xl border border-red-200/50 shadow-sm flex items-center gap-3 animate-shake">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span class="font-medium">{{ session('error') }}</span>
             </div>
         @endif
 
-        {{-- ACTIVE EXAMS --}}
-        <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4 border-l-4 border-emerald-500 pl-3">Sedang
-            Berlangsung</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            @forelse($activeExams as $exam)
+        <!-- Exam Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($exams as $exam)
+                @php
+                    // Check if already attempted
+                    $attempt = $exam->attempts()->where('user_id', auth()->id())->first();
+                    $isFinished = $attempt && $attempt->submitted_at;
+                    $isOngoing = $attempt && !$attempt->submitted_at;
+                @endphp
+
                 <div
-                    class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4">
-                        <span class="animate-pulse w-3 h-3 bg-emerald-500 rounded-full inline-block"></span>
+                    class="group relative bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full">
+
+                    @if($isFinished)
+                        <div
+                            class="absolute top-4 right-4 px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full text-xs font-bold border border-emerald-200">
+                            Selesai
+                        </div>
+                    @elseif($isOngoing)
+                        <div
+                            class="absolute top-4 right-4 px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-xs font-bold border border-yellow-200 animate-pulse">
+                            Sedang Dikerjakan
+                        </div>
+                    @endif
+
+                    <!-- Decor -->
+                    <div
+                        class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center text-emerald-500 mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="M12 13v6" />
+                            <path d="M12 18l-3-3" />
+                            <path d="M12 18l3-3" />
+                        </svg>
                     </div>
 
-                    <div class="flex justify-between items-start mb-4">
-                        <div
-                            class="p-3 bg-emerald-100 dark:bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    <h3
+                        class="text-xl font-bold text-slate-800 dark:text-white mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                        {{ $exam->title }}</h3>
+
+                    <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400 text-sm mb-4">
+                        <span class="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                <path d="m6 9 6 6 6-6" />
                             </svg>
-                        </div>
-                        <span
-                            class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-bold mr-6">
+                            {{ $exam->classroom->name }}
+                        </span>
+                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                        <span class="flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
                             {{ $exam->duration_minutes }} Menit
                         </span>
                     </div>
 
-                    <h3
-                        class="text-lg font-bold text-slate-800 dark:text-white mb-1 group-hover:text-emerald-600 transition-colors">
-                        {{ $exam->title }}
-                    </h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">{{ $exam->classroom->name }}</p>
+                    <p class="text-slate-400 dark:text-slate-500 text-sm mb-6 line-clamp-2">
+                        {{ $exam->description ?? 'Tidak ada deskripsi tambahan.' }}</p>
 
-                    @if($exam->description)
-                        <p class="text-sm text-slate-600 dark:text-slate-300 mb-6 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
-                            {{ Str::limit($exam->description, 80) }}
-                        </p>
-                    @endif
-
-                    @php
-                        $attempt = $exam->attempts->first();
-                        $isResume = $attempt && !$attempt->submitted_at;
-                    @endphp
-
-                    <a href="{{ route('student.exams.take', $exam) }}"
-                        class="block w-full py-3 text-center bg-gradient-to-r {{ $isResume ? 'from-amber-500 to-orange-600' : 'from-emerald-500 to-green-600' }} text-white rounded-xl shadow-lg hover:shadow-xl transition-all font-bold">
-                        {{ $isResume ? 'Lanjutkan Ujian' : 'Kerjakan Sekarang' }}
-                    </a>
-                </div>
-            @empty
-                <div
-                    class="col-span-full text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">
-                    <p class="text-slate-500 dark:text-slate-400 font-medium">Tidak ada ujian aktif saat ini.</p>
-                </div>
-            @endforelse
-        </div>
-
-        {{-- HISTORY EXAMS --}}
-        <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4 border-l-4 border-slate-500 pl-3">Riwayat Ujian
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($historyExams as $exam)
-                @php $attempt = $exam->attempts->first(); @endphp
-                <div
-                    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm grayscale hover:grayscale-0 transition-all duration-500 opacity-80 hover:opacity-100">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="p-3 bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20h9" />
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <span class="block text-xs text-slate-400 uppercase">Nilai Anda</span>
-                            <span
-                                class="text-2xl font-black {{ $attempt->score >= 75 ? 'text-emerald-500' : 'text-slate-700 dark:text-slate-300' }}">
-                                {{ $attempt->score }}
-                            </span>
-                        </div>
+                    <div class="mt-auto">
+                        @if($isFinished)
+                            <a href="{{ route('student.exams.result', $exam) }}"
+                                class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-100 text-emerald-600 rounded-xl font-bold hover:bg-emerald-200 transition-colors">
+                                Lihat Hasil
+                            </a>
+                        @elseif($isOngoing)
+                            <a href="{{ route('student.exams.take', $exam) }}"
+                                class="flex items-center justify-center gap-2 w-full py-3 bg-yellow-400 text-yellow-900 rounded-xl font-bold hover:bg-yellow-500 transition-colors shadow-lg shadow-yellow-400/20">
+                                Lanjutkan Ujian
+                            </a>
+                        @else
+                            <form action="{{ route('student.exams.start-attempt', $exam) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="flex items-center justify-center gap-2 w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold hover:bg-slate-700 dark:hover:bg-slate-200 transition-colors shadow-lg">
+                                    Mulai Kerjakan
+                                </button>
+                            </form>
+                        @endif
                     </div>
-
-                    <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-1">{{ $exam->title }}</h3>
-                    <p class="text-xs text-slate-400 mb-4">Diselesaikan: {{ $attempt->submitted_at->format('d M Y, H:i') }}</p>
-
-                    <a href="{{ route('student.exams.result', $exam) }}"
-                        class="block w-full py-2 text-center bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-semibold text-sm">
-                        Lihat Detail Hasil
-                    </a>
                 </div>
             @empty
-                <div class="col-span-full py-8 text-center text-slate-400">
-                    Belum ada riwayat ujian.
+                <div
+                    class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12 px-6 rounded-3xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 border-dashed">
+                    <div class="inline-flex p-4 bg-white dark:bg-slate-700/50 rounded-full mb-4 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-slate-300">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                    </div>
+                    <p class="text-slate-500 font-medium">Tidak ada ujian aktif saat ini.</p>
+                    <p class="text-slate-400 text-sm">Cek kembali nanti atau hubungi guru Anda.</p>
                 </div>
             @endforelse
         </div>

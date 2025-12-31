@@ -202,8 +202,9 @@ Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher
 Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->group(function () {
     Route::get('exams', [\App\Http\Controllers\Student\ExamController::class, 'index'])->name('exams.index');
     Route::get('exams/{exam}/take', [\App\Http\Controllers\Student\ExamController::class, 'take'])->name('exams.take');
+    Route::post('exams/{exam}/start', [\App\Http\Controllers\Student\ExamController::class, 'startAttempt'])->name('exams.start-attempt');
     Route::post('exams/{exam}/submit', [\App\Http\Controllers\Student\ExamController::class, 'submit'])->name('exams.submit');
-    Route::post('exams/{exam}/violation', [\App\Http\Controllers\Student\ExamController::class, 'recordViolation'])->name('exams.violation');
+    Route::post('exams/{exam}/violation', [\App\Http\Controllers\Student\ExamController::class, 'recordViolation'])->name('exams.record-violation');
     Route::get('exams/{exam}/result', [\App\Http\Controllers\Student\ExamController::class, 'result'])->name('exams.result'); // Added result route
 });
 

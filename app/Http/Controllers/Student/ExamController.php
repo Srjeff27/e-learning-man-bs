@@ -32,19 +32,34 @@ class ExamController extends Controller
             ->latest()
             ->get();
 
-        $activeExams = $exams->filter(function ($exam) {
-            $attempt = $exam->attempts->first();
-            // Show as active if: Exam is Active AND (Not attempted OR Not submitted)
-            return $exam->is_active && (!$attempt || !$attempt->submitted_at);
-        });
+        return view('student.exams.index', compact('exams'));
+    }
 
-        $historyExams = $exams->filter(function ($exam) {
-            $attempt = $exam->attempts->first();
-            // Show as history if: Attempted AND Submitted
-            return $attempt && $attempt->submitted_at;
-        });
+    public function startAttempt(Exam $exam)
+    {
+        // Check availability
+        if (!$exam->is_active) {
+            return redirect()->route('student.exams.index')->with('error', 'Ujian belum dimulai atau sudah selesai.');
+        }
 
-        return view('student.exams.index', compact('activeExams', 'historyExams'));
+        // Check if student already has an attempt
+        $attempt = ExamAttempt::firstOrCreate(
+            [
+                'exam_id' => $exam->id,
+                'user_id' => Auth::id()
+            ],
+            [
+                'started_at' => now(),
+                'status' => 'in_progress'
+            ]
+        );
+
+        // If already submitted, prevent retake
+        if ($attempt->submitted_at) {
+            return redirect()->route('student.exams.index')->with('error', 'Anda sudah mengerjakan ujian ini.');
+        }
+
+        return redirect()->route('student.exams.take', $exam);
     }
 
     public function take(Exam $exam)
@@ -131,9 +146,14 @@ class ExamController extends Controller
     {
         $attempt = ExamAttempt::where('exam_id', $exam->id)
             ->where('user_id', Auth::id())
+            ->with('answers')
             ->firstOrFail();
 
-        return view('student.exams.result', compact('exam', 'attempt'));
+        $score = $attempt->score;
+        $correct = $attempt->answers->where('is_correct', true)->count();
+        $wrong = $attempt->answers->where('is_correct', false)->count();
+
+        return view('student.exams.result', compact('exam', 'attempt', 'score', 'correct', 'wrong'));
     }
     public function recordViolation(Request $request, Exam $exam)
     {
