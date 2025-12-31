@@ -57,7 +57,8 @@
                                 </span>
                                 <div class="flex-grow">
                                     <p class="text-lg font-medium text-slate-800 dark:text-white leading-relaxed select-none">
-                                        {{ $question->question_text }}</p>
+                                        {{ $question->question_text }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -135,28 +136,90 @@
         </div>
     </div>
 
-    <!-- Security Overlay (Initially Hidden) -->
-    <div id="fullscreen-warning"
-        class="fixed inset-0 bg-slate-900/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center text-center p-8 hidden">
-        <div class="bg-red-500/10 p-6 rounded-full mb-6 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
-                <path
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+    <!-- Security Overlay (Dynamic Content) -->
+    <div id="security-overlay"
+        class="fixed inset-0 bg-slate-900/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center text-center p-8 transition-all duration-300">
+        
+        <!-- State 1: Start/Rules -->
+        <div id="state-start" class="max-w-xl">
+            <div class="bg-emerald-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-4">ATURAN UJIAN</h2>
+            <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 text-left space-y-3 mb-8">
+                <p class="text-slate-300 flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">1.</span>
+                    Wajib menggunakan mode Fullscreen selama ujian.
+                </p>
+                <p class="text-slate-300 flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">2.</span>
+                    Dilarang berpindah tab, membuka aplikasi lain, atau minimize browser.
+                </p>
+                <p class="text-slate-300 flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">3.</span>
+                    Jika keluar fullscreen (tidak sengaja), Anda punya waktu <span class="text-emerald-400 font-bold">5 detik</span> untuk kembali.
+                </p>
+                <p class="text-slate-300 flex items-start gap-3">
+                    <span class="text-red-500 font-bold">4.</span>
+                    Membuka tab lain akan dianggap kecurangan dan ujian <span class="text-red-400 font-bold">langsung dihentikan</span>.
+                </p>
+            </div>
+            <button onclick="startExam()"
+                class="px-10 py-4 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20 transform hover:scale-105">
+                Mulai Kerjakan
+            </button>
         </div>
-        <h2 class="text-3xl font-black text-white mb-2">MODE UJIAN WAJIB FULLSCREEN</h2>
-        <p class="text-slate-300 max-w-md mb-8">Anda dilarang keluar dari mode fullscreen. Klik tombol di bawah untuk
-            kembali ke ujian.</p>
-        <button onclick="enableFullscreen()"
-            class="px-8 py-4 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20">
-            Kembali ke Ujian
-        </button>
+
+        <!-- State 2: Violation Warning (Countdown) -->
+        <div id="state-warning" class="hidden max-w-lg">
+            <div class="bg-red-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-2">PERINGATAN!</h2>
+            <p class="text-slate-300 mb-6 text-lg">Anda keluar dari mode fullscreen. Kembali dalam:</p>
+            
+            <div class="text-6xl font-black text-red-500 mb-8 font-mono" id="countdown-display">5</div>
+            
+            <button onclick="enableFullscreen()"
+                class="px-8 py-4 bg-white text-slate-900 rounded-xl font-bold hover:bg-slate-100 transition-colors shadow-lg">
+                Kembali ke Ujian
+            </button>
+        </div>
+
+        <!-- State 3: Terminated -->
+        <div id="state-terminated" class="hidden max-w-lg">
+            <div class="bg-red-600/20 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-4">UJIAN DIHENTIKAN</h2>
+            <p class="text-slate-300 mb-8">Terdeteksi aktivitas mencurigakan (pindah tab/minimize). Sistem telah otomatis menghentikan ujian Anda.</p>
+            <a href="{{ route('student.exams.index') }}"
+                class="px-8 py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-600/30">
+                Kembali ke Dashboard
+            </a>
+        </div>
     </div>
 
     @push('scripts')
         <script src="//cdn.jsdelivr.net/npm/alpinejs" defer></script>
         <script>
+            // Define global functions to avoid ReferenceError
+            window.startExam = null;
+            window.enableFullscreen = null;
+
             document.addEventListener('alpine:init', () => {
                 Alpine.data('examApp', () => ({
                     sidebarOpen: false,
@@ -171,84 +234,155 @@
                 }))
             });
 
-            // Timer Logic
-            const endTime = new Date("{{ \Carbon\Carbon::parse($attempt->started_at)->addMinutes($exam->duration_minutes) }}").getTime();
+            document.addEventListener('DOMContentLoaded', () => {
+                // ==========================================
+                // TIMER LOGIC
+                // ==========================================
+                const endTime = new Date("{{ \Carbon\Carbon::parse($attempt->started_at)->addMinutes($exam->duration_minutes) }}").getTime();
 
-            function updateTimer() {
-                const now = new Date().getTime();
-                const distance = endTime - now;
+                function updateTimer() {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+                    const timerElement = document.getElementById("timer");
 
-                if (distance < 0) {
-                    document.getElementById("exam-form").submit();
-                    return;
-                }
+                    if (!timerElement) return;
 
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("timer").innerHTML =
-                    (hours < 10 ? "0" + hours : hours) + ":" +
-                    (minutes < 10 ? "0" + minutes : minutes) + ":" +
-                    (seconds < 10 ? "0" + seconds : seconds);
-
-                if (distance < 300000) { // 5 minutes warning
-                    document.getElementById("timer").classList.replace("text-emerald-600", "text-red-500");
-                    document.getElementById("timer").classList.add("animate-pulse");
-                }
-            }
-            setInterval(updateTimer, 1000);
-
-            // Security & Fullscreen Logic
-            const warningOverlay = document.getElementById('fullscreen-warning');
-            let violationCount = 0;
-
-            function enableFullscreen() {
-                const elem = document.documentElement;
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) { /* Safari */
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { /* IE11 */
-                    elem.msRequestFullscreen();
-                }
-                warningOverlay.classList.add('hidden');
-            }
-
-            // Force Fullscreen on Load
-            // document.addEventListener('click', enableFullscreen, { once: true });
-
-            // Detect Fullscreen Exit
-            document.addEventListener('fullscreenchange', () => {
-                if (!document.fullscreenElement) {
-                    warningOverlay.classList.remove('hidden');
-                    recordViolation();
-                }
-            });
-
-            // Detect Tab Switching/Blur
-            window.addEventListener('blur', () => {
-                // Optional: trigger warning or record violation immediately
-                // For now, let's just log it or show a toast if we had one.
-                recordViolation();
-            });
-
-            function recordViolation() {
-                violationCount++;
-                // Send AJAX to server to record violation
-                fetch('{{ route("student.exams.record-violation", $exam) }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
+                    if (distance < 0) {
+                        document.getElementById("exam-form").submit();
+                        return;
                     }
-                }).then(res => {
-                    if (res.status === 403) {
-                        alert('Terlalu banyak pelanggaran! Ujian Anda dihentikan otomatis.');
-                        window.location.reload(); // Will redirect to result
+
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    timerElement.innerHTML =
+                        (hours < 10 ? "0" + hours : hours) + ":" +
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                        (seconds < 10 ? "0" + seconds : seconds);
+
+                    if (distance < 300000) { // 5 minutes warning
+                        timerElement.classList.replace("text-emerald-600", "text-red-500");
+                        timerElement.classList.add("animate-pulse");
+                    }
+                }
+                setInterval(updateTimer, 1000);
+
+                // ==========================================
+                // ANTI-CHEAT SYSTEM LOGIC
+                // ==========================================
+                const overlay = document.getElementById('security-overlay');
+                const stateStart = document.getElementById('state-start');
+                const stateWarning = document.getElementById('state-warning');
+                const stateTerminated = document.getElementById('state-terminated');
+                const countdownDisplay = document.getElementById('countdown-display');
+                
+                let isExamStarted = false;
+                let countdownInterval = null;
+                let countdownTime = 5;
+                let isTerminated = false;
+
+                // Assign to global window object
+                window.startExam = function() {
+                    window.enableFullscreen();
+                    isExamStarted = true;
+                    if(stateStart) stateStart.classList.add('hidden');
+                    
+                    // Allow a small delay for fullscreen to engage before checking
+                    setTimeout(() => {
+                        // We check if fullscreen is active. 
+                        // If strict browser policy blocked it, we give another prompt or show warning
+                        if (document.fullscreenElement) {
+                            if(overlay) overlay.classList.add('hidden');
+                        } else {
+                            // Fullscreen failed or user denied
+                            // Force strict check: if not fullscreen, show warning immediately
+                            showWarning();
+                        }
+                    }, 800);
+                }
+
+                window.enableFullscreen = function() {
+                    const elem = document.documentElement;
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen().catch(err => {
+                            console.error("Fullscreen Error:", err);
+                        });
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    }
+                }
+
+                // 1. FULLSCREEN DETECTION
+                document.addEventListener('fullscreenchange', () => {
+                    if (!isExamStarted) return; 
+
+                    if (!document.fullscreenElement) {
+                        showWarning();
+                    } else {
+                        hideWarning();
                     }
                 });
-            }
+
+                function showWarning() {
+                    if(overlay) overlay.classList.remove('hidden');
+                    if(stateStart) stateStart.classList.add('hidden');
+                    if(stateWarning) stateWarning.classList.remove('hidden');
+                    
+                    // Reset Countdown
+                    countdownTime = 5;
+                    if(countdownDisplay) countdownDisplay.textContent = countdownTime;
+                    
+                    if (countdownInterval) clearInterval(countdownInterval);
+                    
+                    countdownInterval = setInterval(() => {
+                        countdownTime--;
+                        if(countdownDisplay) countdownDisplay.textContent = countdownTime;
+                        
+                        if (countdownTime <= 0) {
+                            clearInterval(countdownInterval);
+                            terminateExam('fullscreen_timeout');
+                        }
+                    }, 1000);
+                }
+
+                function hideWarning() {
+                    if (countdownInterval) clearInterval(countdownInterval);
+                    if(overlay) overlay.classList.add('hidden');
+                    if(stateWarning) stateWarning.classList.add('hidden');
+                }
+
+                // 2. TAB SWITCHING (Strict)
+                document.addEventListener('visibilitychange', () => {
+                    if (!isExamStarted) return;
+                    if (document.hidden) {
+                        terminateExam('tab_switch');
+                    }
+                });
+
+                function terminateExam(reason) {
+                    if (isTerminated) return;
+                    isTerminated = true;
+                    
+                    if (countdownInterval) clearInterval(countdownInterval);
+
+                    if(overlay) overlay.classList.remove('hidden');
+                    if(stateStart) stateStart.classList.add('hidden');
+                    if(stateWarning) stateWarning.classList.add('hidden');
+                    if(stateTerminated) stateTerminated.classList.remove('hidden');
+
+                    fetch('{{ route("student.exams.record-violation", $exam) }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ terminate: true, reason: reason })
+                    });
+                }
+            });
 
             // Prevent Right Click & Copy Paste
             document.addEventListener('contextmenu', event => event.preventDefault());
