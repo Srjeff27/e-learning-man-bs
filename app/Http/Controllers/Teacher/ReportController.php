@@ -39,6 +39,14 @@ class ReportController extends Controller
             ])
             ->get();
 
+        $exams = $classroom->exams()
+            ->with([
+                'attempts' => function ($query) {
+                    $query->with('user');
+                }
+            ])
+            ->get();
+
         $students = $classroom->students;
 
         // Build grade matrix
@@ -47,12 +55,14 @@ class ReportController extends Controller
             $grades[$student->id] = [
                 'student' => $student,
                 'assignments' => [],
+                'exams' => [],
                 'average' => 0,
             ];
 
             $totalScore = 0;
             $gradedCount = 0;
 
+            // Process Assignments
             foreach ($assignments as $assignment) {
                 $submission = $assignment->submissions->firstWhere('student_id', $student->id);
                 $grades[$student->id]['assignments'][$assignment->id] = $submission;
@@ -63,10 +73,22 @@ class ReportController extends Controller
                 }
             }
 
+            // Process Exams
+            foreach ($exams as $exam) {
+                $attempt = $exam->attempts->firstWhere('user_id', $student->id);
+                $grades[$student->id]['exams'][$exam->id] = $attempt;
+
+                if ($attempt && $attempt->score !== null) {
+                    // Exam score is already 0-100 based on our previous logic
+                    $totalScore += $attempt->score;
+                    $gradedCount++;
+                }
+            }
+
             $grades[$student->id]['average'] = $gradedCount > 0 ? round($totalScore / $gradedCount, 1) : null;
         }
 
-        return view('teacher.reports.classroom', compact('classroom', 'assignments', 'students', 'grades'));
+        return view('teacher.reports.classroom', compact('classroom', 'assignments', 'exams', 'students', 'grades'));
     }
 
     /**
@@ -85,6 +107,15 @@ class ReportController extends Controller
             ->orderBy('created_at')
             ->get();
 
+        $exams = $classroom->exams()
+            ->with([
+                'attempts' => function ($query) {
+                    $query->with('user');
+                }
+            ])
+            ->orderBy('created_at')
+            ->get();
+
         $students = $classroom->students()->orderBy('name')->get();
 
         // Build CSV content
@@ -98,7 +129,7 @@ class ReportController extends Controller
             'Expires' => '0',
         ];
 
-        $callback = function () use ($classroom, $assignments, $students) {
+        $callback = function () use ($classroom, $assignments, $exams, $students) {
             $file = fopen('php://output', 'w');
 
             // Add BOM for Excel UTF-8 compatibility
@@ -115,6 +146,9 @@ class ReportController extends Controller
             $headerRow = ['No', 'Nama Siswa', 'Email'];
             foreach ($assignments as $assignment) {
                 $headerRow[] = $assignment->title . ' (Max: ' . $assignment->max_score . ')';
+            }
+            foreach ($exams as $exam) {
+                $headerRow[] = '[Ujian] ' . $exam->title;
             }
             $headerRow[] = 'Rata-rata (%)';
             fputcsv($file, $headerRow);
@@ -136,6 +170,17 @@ class ReportController extends Controller
                         $gradedCount++;
                     } elseif ($submission) {
                         $row[] = 'Menunggu';
+                    } else {
+                        $row[] = '-';
+                    }
+                }
+
+                foreach ($exams as $exam) {
+                    $attempt = $exam->attempts->firstWhere('user_id', $student->id);
+                    if ($attempt && $attempt->score !== null) {
+                        $row[] = $attempt->score;
+                        $totalScore += $attempt->score;
+                        $gradedCount++;
                     } else {
                         $row[] = '-';
                     }

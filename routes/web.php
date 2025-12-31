@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ChatbotController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Student\AssignmentController as StudentAssignmentController;
 use App\Http\Controllers\Student\ClassroomController as StudentClassroomController;
 use App\Http\Controllers\Teacher\AssignmentController as TeacherAssignmentController;
@@ -14,34 +11,12 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Public Routes (Guest)
+| Public Routes - Redirect to Login
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
-Route::get('/visi-misi', [HomeController::class, 'visiMisi'])->name('visi-misi');
-Route::get('/struktur-organisasi', [HomeController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
-Route::get('/guru-staff', [HomeController::class, 'guruStaff'])->name('guru-staff');
-Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
-Route::get('/berita/{slug}', [HomeController::class, 'beritaShow'])->name('berita.show');
-Route::get('/galeri', [HomeController::class, 'galeri'])->name('galeri');
-Route::get('/kalender/download', [HomeController::class, 'downloadCalendar'])->name('kalender.download');
-Route::get('/kalender', [HomeController::class, 'kalender'])->name('kalender');
-Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
-Route::post('/kontak', [HomeController::class, 'kontakSubmit'])->name('kontak.submit');
-
-/*
-|--------------------------------------------------------------------------
-| Chatbot Routes (Public)
-|--------------------------------------------------------------------------
-*/
-
-Route::prefix('chatbot')->name('chatbot.')->group(function () {
-    Route::get('/', [ChatbotController::class, 'index'])->name('index');
-    Route::post('/session', [ChatbotController::class, 'session'])->name('session');
-    Route::post('/send', [ChatbotController::class, 'send'])->name('send');
-    Route::post('/clear', [ChatbotController::class, 'clear'])->name('clear');
+Route::get('/', function () {
+    return redirect()->route('login');
 });
 
 /*
@@ -65,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('student.classrooms.index');
         }
 
-        return view('dashboard');
+        return redirect()->route('login');
     })->name('dashboard');
 
     Route::get('/home', function () {
@@ -95,33 +70,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Users Management
     Route::resource('users', UserController::class);
     Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
-
-    // Banner Management
-    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
-
-    // Profile Management
-    Route::get('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
-    Route::put('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
-
-    // News Management
-    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
-    Route::patch('news/{news}/toggle', [\App\Http\Controllers\Admin\NewsController::class, 'toggle'])->name('news.toggle');
-
-    // Gallery Management
-    Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
-
-    // Calendar/Events Management
-    Route::resource('calendar', \App\Http\Controllers\Admin\CalendarController::class);
-
-    // Contact Messages Management
-    Route::get('contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index');
-    Route::get('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('contacts.show');
-    Route::patch('contacts/{contact}/read', [\App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])->name('contacts.mark-read');
-    Route::delete('contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy');
-
-    // Teachers Management
-    Route::resource('teachers', \App\Http\Controllers\Admin\TeacherController::class)->except(['show']);
-    Route::patch('teachers/{teacher}/toggle-active', [\App\Http\Controllers\Admin\TeacherController::class, 'toggleActive'])->name('teachers.toggle-active');
 });
 
 /*
@@ -228,7 +176,34 @@ Route::middleware(['auth'])->prefix('notifications')->name('notifications.')->gr
     Route::get('/recent', [\App\Http\Controllers\NotificationController::class, 'recent'])->name('recent');
     Route::get('/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('unread-count');
     Route::post('/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('read');
-    Route::post('/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
     Route::delete('/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Exam Routes
+|--------------------------------------------------------------------------
+*/
+
+// Teacher Exam Routes
+Route::middleware(['auth', 'role:guru,admin'])->prefix('teacher')->name('teacher.')->group(function () {
+    Route::resource('exams', \App\Http\Controllers\Teacher\ExamController::class);
+    Route::post('exams/{exam}/questions', [\App\Http\Controllers\Teacher\ExamController::class, 'addQuestion'])->name('exams.questions.store');
+    Route::delete('exams/{exam}/questions/{question}', [\App\Http\Controllers\Teacher\ExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
+    Route::post('exams/{exam}/toggle-status', [\App\Http\Controllers\Teacher\ExamController::class, 'toggleStatus'])->name('exams.toggle-status');
+    Route::get('exams/{exam}/monitor', [\App\Http\Controllers\Teacher\ExamController::class, 'monitor'])->name('exams.monitor');
+    Route::get('exams/{exam}/history', [\App\Http\Controllers\Teacher\ExamController::class, 'history'])->name('exams.history');
+    Route::get('exams/{exam}/monitor-data', [\App\Http\Controllers\Teacher\ExamController::class, 'monitorData'])->name('exams.monitor-data');
+    Route::post('exams/{exam}/start', [\App\Http\Controllers\Teacher\ExamController::class, 'start'])->name('exams.start');
+    Route::post('exams/{exam}/stop', [\App\Http\Controllers\Teacher\ExamController::class, 'stop'])->name('exams.stop');
+});
+
+// Student Exam Routes
+Route::middleware(['auth', 'role:siswa'])->prefix('student')->name('student.')->group(function () {
+    Route::get('exams', [\App\Http\Controllers\Student\ExamController::class, 'index'])->name('exams.index');
+    Route::get('exams/{exam}/take', [\App\Http\Controllers\Student\ExamController::class, 'take'])->name('exams.take');
+    Route::post('exams/{exam}/submit', [\App\Http\Controllers\Student\ExamController::class, 'submit'])->name('exams.submit');
+    Route::post('exams/{exam}/violation', [\App\Http\Controllers\Student\ExamController::class, 'recordViolation'])->name('exams.violation');
+    Route::get('exams/{exam}/result', [\App\Http\Controllers\Student\ExamController::class, 'result'])->name('exams.result'); // Added result route
 });
 

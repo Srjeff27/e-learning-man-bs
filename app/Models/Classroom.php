@@ -80,6 +80,14 @@ class Classroom extends Model
     }
 
     /**
+     * Get the exams for the classroom.
+     */
+    public function exams(): HasMany
+    {
+        return $this->hasMany(Exam::class);
+    }
+
+    /**
      * Get the announcements for the classroom.
      */
     public function announcements(): HasMany

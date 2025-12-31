@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'LMS') - SMAN 2 KAUR</title>
+    <title>@yield('title', 'LMS') - E-Learning MAN Bengkulu Selatan</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap"
@@ -77,16 +78,16 @@
 
         // Style Saat Aktif (GLOSSY BLUE EFFECT)
         // Menggunakan before: untuk efek pantulan kaca di setengah bagian atas
-        $navActive = "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 ring-1 ring-white/20 
-                                      before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
+        $navActive = "bg-gradient-to-br from-emerald-600 to-green-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-white/20 
+                                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
     @endphp
 
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
         <div
-            class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] opacity-70">
+            class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[100px] opacity-70">
         </div>
         <div
-            class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[100px] opacity-70">
+            class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-green-500/10 rounded-full blur-[100px] opacity-70">
         </div>
     </div>
 
@@ -103,18 +104,18 @@
                         <div
                             class="relative w-10 h-10 flex-shrink-0 transition-transform duration-500 group-hover:rotate-12">
                             <div
-                                class="absolute inset-0 bg-blue-500 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity">
+                                class="absolute inset-0 bg-emerald-500 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity">
                             </div>
-                            <img src="{{ asset('images/logo-sman2.png') }}" alt="Logo"
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo"
                                 class="relative w-full h-full object-contain drop-shadow-sm">
                         </div>
                         <div class="flex flex-col">
                             <span
-                                class="text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-none">SMAN
-                                2 KAUR</span>
+                                class="text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-none">MAN
+                                Bengkulu Selatan</span>
                             <span
-                                class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mt-1">Student
-                                Portal</span>
+                                class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mt-1">Portal
+                                Siswa</span>
                         </div>
                     </a>
                 </div>
@@ -154,6 +155,18 @@
                         @endif
                     </a>
 
+                    {{-- Link: Ujian --}}
+                    <a href="{{ route('student.exams.index') }}"
+                        class="{{ $navBase }} {{ request()->routeIs('student.exams.*') ? $navActive : $navInactive }}">
+
+                        <span class="relative z-10">Ujian</span>
+                        @if(request()->routeIs('student.exams.*'))
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer">
+                            </div>
+                        @endif
+                    </a>
+
                     {{-- Link: Tugas --}}
                     <a href="{{ route('student.assignments.index') }}"
                         class="{{ $navBase }} {{ request()->routeIs('student.assignments.index') ? $navActive : $navInactive }}">
@@ -174,7 +187,7 @@
                         <button @click="open = !open"
                             class="flex items-center gap-3 w-full p-3 rounded-2xl transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
                             <div
-                                class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
+                                class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
                             <div class="flex-1 text-left min-w-0">

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'LMS Guru') - SMAN 2 KAUR</title>
+    <title>@yield('title', 'LMS Guru') - E-Learning MAN Bengkulu Selatan</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap"
@@ -72,7 +73,7 @@
         $navInactive = "text-slate-500 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1";
 
         $navActive = "bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-white/20 
-                                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
+                                                                              before:absolute before:inset-x-0 before:top-0 before:h-1/2 before:bg-gradient-to-b before:from-white/20 before:to-transparent";
     @endphp
 
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
@@ -99,16 +100,16 @@
                             <div
                                 class="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-blue-500 rounded-xl blur opacity-40 group-hover:opacity-60 transition-opacity">
                             </div>
-                            <img src="{{ asset('images/logo-sman2.png') }}" alt="Logo"
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo"
                                 class="relative w-full h-full object-contain drop-shadow-sm">
                         </div>
                         <div class="flex flex-col">
                             <span
-                                class="text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-none">SMAN
-                                2 KAUR</span>
+                                class="text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-none">MAN
+                                Bengkulu Selatan</span>
                             <span
-                                class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mt-1">Teacher
-                                Portal</span>
+                                class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mt-1">Portal
+                                Guru</span>
                         </div>
                     </a>
                 </div>
@@ -136,6 +137,18 @@
 
                         <span class="relative z-10">Kelola Kelas</span>
                         @if(request()->routeIs('teacher.classrooms.*'))
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer">
+                            </div>
+                        @endif
+                    </a>
+
+                    {{-- Link: Kelola Ujian --}}
+                    <a href="{{ route('teacher.exams.index') }}"
+                        class="{{ $navBase }} {{ request()->routeIs('teacher.exams.*') ? $navActive : $navInactive }}">
+
+                        <span class="relative z-10">Kelola Ujian</span>
+                        @if(request()->routeIs('teacher.exams.*'))
                             <div
                                 class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer">
                             </div>
@@ -221,17 +234,7 @@
                                 Pengaturan Akun
                             </a>
 
-                            <a href="{{ route('home') }}"
-                                class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-700 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9">
-                                    </path>
-                                </svg>
-                                Ke Website
-                            </a>
 
-                            <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

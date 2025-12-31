@@ -111,6 +111,16 @@
                                     </div>
                                 </th>
                             @endforeach
+
+                            {{-- Exam Headers --}}
+                            @foreach($exams as $exam)
+                                <th class="px-4 py-4 min-w-[140px] text-center bg-indigo-50/50 dark:bg-indigo-900/20">
+                                    <div class="flex flex-col items-center group cursor-help">
+                                        <span class="line-clamp-1 group-hover:text-indigo-600 transition-colors">{{ $exam->title }}</span>
+                                        <span class="text-[10px] text-slate-400 font-normal mt-0.5">Ujian</span>
+                                    </div>
+                                </th>
+                            @endforeach
                             
                             {{-- Average Header --}}
                             <th class="px-6 py-4 text-center min-w-[100px] bg-emerald-50/80 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400">Rata-rata</th>
@@ -166,6 +176,36 @@
                                     </td>
                                 @endforeach
 
+                                {{-- Exam Scores --}}
+                                @foreach($exams as $exam)
+                                    <td class="px-4 py-4 text-center">
+                                        @php
+                                            $attempt = $data['exams'][$exam->id] ?? null;
+                                            $score = ($attempt && $attempt->score !== null) ? $attempt->score : null;
+                                            
+                                            // Logic Warna
+                                            if($score === null) {
+                                                $badgeClass = "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500";
+                                                $display = "-";
+                                            } elseif ($score >= 75) { 
+                                                // Assuming 75 is KKM
+                                                $badgeClass = "bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20";
+                                                $display = $score;
+                                            } elseif ($score >= 50) {
+                                                $badgeClass = "bg-amber-100 text-amber-700 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20";
+                                                $display = $score;
+                                            } else {
+                                                $badgeClass = "bg-rose-100 text-rose-700 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20";
+                                                $display = $score;
+                                            }
+                                        @endphp
+
+                                        <span class="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-lg text-sm font-bold {{ $badgeClass }}">
+                                            {{ $display }}
+                                        </span>
+                                    </td>
+                                @endforeach
+
                                 {{-- Average Column --}}
                                 <td class="px-6 py-4 text-center bg-emerald-50/30 dark:bg-emerald-900/10">
                                     @if($data['average'] !== null)
@@ -178,8 +218,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="{{ 3 + $assignments->count() }}" class="px-6 py-12 text-center">
+                                <td colspan="{{ 3 + $assignments->count() + $exams->count() }}" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
                                         <svg class="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                                         <p class="font-medium">Belum ada data siswa di kelas ini.</p>
