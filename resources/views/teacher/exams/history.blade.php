@@ -94,13 +94,14 @@
             </div>
         </div>
 
-        <!-- Attempts Table -->
-        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white">Detail Nilai Siswa</h3>
+        <!-- Attempts List -->
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 overflow-hidden">
+            <div class="p-5 md:p-6 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50">
+                <h3 class="text-base md:text-lg font-bold text-slate-800 dark:text-white">Detail Nilai Siswa</h3>
             </div>
             
-            <div class="overflow-x-auto">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50/80 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
@@ -175,6 +176,72 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden p-4 space-y-4">
+                @forelse($attempts as $attempt)
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-4">
+                         <!-- Student Info & Score -->
+                         <div class="flex justify-between items-start">
+                             <div class="flex items-center gap-3">
+                                 <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-sm shrink-0">
+                                     {{ substr($attempt->user->name, 0, 1) }}
+                                 </div>
+                                 <div class="min-w-0">
+                                     <p class="font-bold text-slate-800 dark:text-white capitalize truncate text-sm">{{ $attempt->user->name }}</p>
+                                     <p class="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                         {{ \Carbon\Carbon::parse($attempt->started_at)->format('H:i') }} - 
+                                         {{ $attempt->submitted_at ? \Carbon\Carbon::parse($attempt->submitted_at)->format('H:i') : '...' }}
+                                     </p>
+                                 </div>
+                             </div>
+                             <div class="text-right">
+                                 <span class="block text-2xl font-black {{ $attempt->score >= 75 ? 'text-emerald-500' : 'text-slate-700' }} leading-none">{{ $attempt->score }}</span>
+                                 <span class="text-[10px] uppercase font-bold text-slate-400">Nilai</span>
+                             </div>
+                         </div>
+ 
+                         <!-- Stats & Status -->
+                         <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700/50">
+                             <div class="flex items-center gap-4 text-xs font-bold">
+                                 <span class="text-emerald-600 flex items-center gap-1">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                     {{ $attempt->answers->where('is_correct', true)->count() }}
+                                 </span>
+                                 <span class="text-red-500 flex items-center gap-1">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                     {{ $attempt->answers->where('is_correct', false)->count() }}
+                                 </span>
+                                 @if($attempt->violation_count > 0)
+                                     <span class="text-orange-500 flex items-center gap-1">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M3.4 20.5 12 4l8.6 16.5H3.4z"/></svg>
+                                         {{ $attempt->violation_count }}
+                                     </span>
+                                 @endif
+                             </div>
+ 
+                             <div>
+                                 @if($attempt->status === 'terminated')
+                                     <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold border bg-red-50 text-red-600 border-red-100 uppercase tracking-wide">
+                                         Dihentikan
+                                     </span>
+                                 @elseif($attempt->submitted_at)
+                                     <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold border bg-emerald-50 text-emerald-600 border-emerald-100 uppercase tracking-wide">
+                                         Selesai
+                                     </span>
+                                 @else
+                                     <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold border bg-slate-50 text-slate-600 border-slate-100 uppercase tracking-wide">
+                                         Proses
+                                     </span>
+                                 @endif
+                             </div>
+                         </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-slate-400 italic text-sm">Belum ada data riwayat ujian.</div>
+                @endforelse
             </div>
         </div>
     </div>

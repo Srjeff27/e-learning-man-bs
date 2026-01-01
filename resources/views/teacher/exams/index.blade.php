@@ -41,7 +41,8 @@
                 </div>
             </div>
             
-            <div class="overflow-x-auto">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50/50 dark:bg-slate-700/30 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
@@ -169,6 +170,99 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden space-y-4 p-4">
+                @forelse($exams as $exam)
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
+                        
+                        <!-- Top Row: Badge & Menu -->
+                        <div class="flex justify-between items-start mb-3">
+                            @if($exam->is_active)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100/80 text-emerald-700 rounded-full text-xs font-bold ring-2 ring-emerald-500/20 animate-pulse">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Berlangsung
+                                </span>
+                                @php
+                                    $endTime = \Carbon\Carbon::parse($exam->start_time)->addMinutes($exam->duration_minutes);
+                                @endphp
+                                <span class="exam-countdown font-mono font-bold text-emerald-600" data-end="{{ $endTime->timestamp * 1000 }}">...</span>
+                            @elseif($exam->end_time)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold border border-slate-200">
+                                    Selesai
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold border border-slate-200 border-dashed">
+                                    Belum Dimulai
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Content -->
+                        <h3 class="font-bold text-slate-800 dark:text-white text-lg mb-1">{{ $exam->title }}</h3>
+                        <div class="flex items-center gap-3 text-xs text-slate-500 mb-4">
+                            <span class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"/><polyline points="17 9 12 13 7 9"/></svg>
+                                {{ $exam->classroom->name ?? 'Semua Kelas' }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ $exam->duration_minutes }} Menit
+                            </span>
+                        </div>
+
+                        <!-- Action Grid -->
+                        <div class="grid grid-cols-4 gap-2 pt-4 border-t border-slate-100 dark:border-slate-700">
+                            {{-- Mulai/Monitor (Primary) --}}
+                            <div class="col-span-2">
+                                @if(!$exam->is_active)
+                                    <form action="{{ route('teacher.exams.start', $exam) }}" method="POST" class="w-full">
+                                        @csrf
+                                        <button type="submit"
+                                            class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 font-bold text-sm">
+                                            Mulai
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('teacher.exams.monitor', $exam) }}"
+                                        class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 font-bold text-sm animate-pulse">
+                                        Monitor
+                                    </a>
+                                @endif
+                            </div>
+
+                            {{-- View --}}
+                            <a href="{{ route('teacher.exams.show', $exam) }}"
+                                class="flex items-center justify-center p-2 bg-slate-50 text-slate-600 rounded-xl border border-slate-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            </a>
+
+                            {{-- Delete --}}
+                            @if($exam->attempts()->exists())
+                                <button type="button" disabled
+                                    class="flex items-center justify-center p-2 bg-slate-100 text-slate-300 rounded-xl border border-slate-200 cursor-not-allowed">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                </button>
+                            @else
+                                <form action="{{ route('teacher.exams.destroy', $exam) }}" method="POST"
+                                    onsubmit="return confirm('Hapus ujian ini? Data nilai akan hilang permanen.');" class="w-full">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="w-full flex items-center justify-center p-2 bg-red-50 text-red-500 rounded-xl border border-red-100 hover:bg-red-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                        <p class="text-slate-500">Belum ada ujian.</p>
+                        <a href="{{ route('teacher.exams.create') }}" class="text-emerald-500 font-bold block mt-2">+ Buat Baru</a>
+                    </div>
+                @endforelse
             </div>
             
             @if($exams->hasPages())
