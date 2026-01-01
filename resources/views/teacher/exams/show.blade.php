@@ -27,10 +27,7 @@
             </div>
 
             <div class="flex gap-3">
-                <a href="{{ route('teacher.exams.monitor', $exam) }}" class="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h5"/><path d="M17 12h5"/><path d="M7 12l5-10 5 10"/><path d="M12 12v10"/></svg>
-                    Monitor
-                </a>
+
                 
                 <button onclick="document.getElementById('add-question-form').scrollIntoView({behavior: 'smooth'})"
                     class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">

@@ -341,6 +341,9 @@
                 });
 
                 function showWarning() {
+                    // Prevent showing warning if already terminated
+                    if (isTerminated) return;
+
                     // Double check visibility before showing warning
                     if (document.hidden || document.visibilityState === 'hidden') {
                         terminateExam('tab_switch_during_warning');
@@ -376,6 +379,8 @@
                 }
 
                 function hideWarning() {
+                    if (isTerminated) return;
+
                     if (countdownInterval) clearInterval(countdownInterval);
                     if (overlay) overlay.classList.add('hidden');
                     if (stateWarning) stateWarning.classList.add('hidden');
@@ -395,6 +400,7 @@
 
                     if (countdownInterval) clearInterval(countdownInterval);
 
+                    // Force UI update
                     if (overlay) overlay.classList.remove('hidden');
                     if (stateStart) stateStart.classList.add('hidden');
                     if (stateWarning) stateWarning.classList.add('hidden');
