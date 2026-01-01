@@ -23,7 +23,7 @@
                 <div>
                     <h1 class="text-sm font-bold text-slate-800 dark:text-white line-clamp-1">{{ $exam->title }}</h1>
                     <p class="text-xs text-slate-500 dark:text-slate-400">Sisa Waktu: <span
-                            class="font-mono font-bold text-emerald-600" id="timer">--:--:--</span></p>
+                            class="font-mono font-bold text-emerald-600 exam-timer" id="timer">--:--:--</span></p>
                 </div>
             </div>
 
@@ -37,36 +37,48 @@
             </button>
         </header>
 
+        <!-- Mobile Floating Timer -->
+        <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden">
+            <div class="bg-slate-900/90 dark:bg-white/90 backdrop-blur-md text-white dark:text-slate-900 px-6 py-3 rounded-full shadow-2xl border border-white/20 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span class="font-mono font-bold text-lg exam-timer">--:--:--</span>
+            </div>
+        </div>
+
         <!-- Main Layout -->
         <div class="flex flex-1 pt-16 h-screen overflow-hidden">
             <!-- Questions Area -->
-            <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-32 scroll-smooth">
+            <main class="flex-1 overflow-y-auto p-3 md:p-8 pb-32 scroll-smooth">
                 <form id="exam-form" action="{{ route('student.exams.submit', $exam) }}" method="POST"
-                    class="max-w-3xl mx-auto space-y-12">
+                    class="max-w-3xl mx-auto space-y-8 md:space-y-12">
                     @csrf
 
                     @foreach($exam->questions as $index => $question)
                         <div id="question-{{ $question->id }}"
-                            class="scroll-mt-24 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
+                            class="scroll-mt-24 bg-white dark:bg-slate-800 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 p-4 md:p-8 shadow-sm hover:shadow-md transition-shadow">
 
                             <!-- Question Header -->
-                            <div class="flex gap-4 mb-6">
+                            <div class="flex gap-3 md:gap-4 mb-4 md:mb-6">
                                 <span
-                                    class="flex-shrink-0 h-8 w-8 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg flex items-center justify-center font-bold text-sm select-none">
+                                    class="flex-shrink-0 h-7 w-7 md:h-8 md:w-8 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg flex items-center justify-center font-bold text-xs md:text-sm select-none">
                                     {{ $index + 1 }}
                                 </span>
                                 <div class="flex-grow">
-                                    <p class="text-lg font-medium text-slate-800 dark:text-white leading-relaxed select-none">
+                                    <p
+                                        class="text-base md:text-lg font-medium text-slate-800 dark:text-white leading-relaxed select-none">
                                         {{ $question->question_text }}
                                     </p>
                                 </div>
                             </div>
 
                             <!-- Options -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-0 md:ml-12">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 ml-0 md:ml-12">
                                 @foreach(['a', 'b', 'c', 'd'] as $option)
                                     <label
-                                        class="group relative flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer overflow-hidden transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10">
+                                        class="group relative flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer overflow-hidden transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10">
                                         <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option }}"
                                             class="peer sr-only" @change="markAnswered({{ $index }})">
 
@@ -75,8 +87,8 @@
                                             class="absolute inset-0 border-2 border-emerald-500 rounded-xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none">
                                         </div>
                                         <div
-                                            class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 text-emerald-500 transition-opacity">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 text-emerald-500 transition-opacity">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                                 fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                                                 stroke-linejoin="round">
                                                 <polyline points="20 6 9 17 4 12" />
@@ -84,11 +96,11 @@
                                         </div>
 
                                         <span
-                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 font-bold uppercase text-sm group-hover:bg-emerald-100 group-hover:text-emerald-600 peer-checked:bg-emerald-500 peer-checked:text-white transition-colors">
+                                            class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 font-bold uppercase text-xs md:text-sm group-hover:bg-emerald-100 group-hover:text-emerald-600 peer-checked:bg-emerald-500 peer-checked:text-white transition-colors">
                                             {{ $option }}
                                         </span>
                                         <span
-                                            class="text-slate-700 dark:text-slate-300 font-medium select-none flex-1 pr-6 group-hover:text-emerald-900 dark:group-hover:text-emerald-100 peer-checked:text-emerald-800 dark:peer-checked:text-emerald-200 transition-colors">
+                                            class="text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium select-none flex-1 pr-6 group-hover:text-emerald-900 dark:group-hover:text-emerald-100 peer-checked:text-emerald-800 dark:peer-checked:text-emerald-200 transition-colors">
                                             {{ $question->{'option_' . $option} }}
                                         </span>
                                     </label>
@@ -98,10 +110,10 @@
                     @endforeach
 
                     <!-- Submit Button Area -->
-                    <div class="pt-8 pb-16">
+                    <div class="pt-6 md:pt-8 pb-16">
                         <button type="submit"
                             onclick="return confirm('Apakah Anda yakin ingin menyelesaikan ujian? Anda tidak dapat mengubah jawaban setelah ini.')"
-                            class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all">
+                            class="w-full py-3 md:py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl md:rounded-2xl font-black text-base md:text-lg shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all">
                             SELESAIKAN UJIAN SEKARANG
                         </button>
                     </div>
@@ -251,9 +263,9 @@
                 function updateTimer() {
                     const now = new Date().getTime();
                     const distance = endTime - now;
-                    const timerElement = document.getElementById("timer");
 
-                    if (!timerElement) return;
+                    // Update all timer elements (Header & Mobile Floating)
+                    const timerElements = document.querySelectorAll(".exam-timer");
 
                     if (distance < 0) {
                         document.getElementById("exam-form").submit();
@@ -264,15 +276,18 @@
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                    timerElement.innerHTML =
+                    const timeString =
                         (hours < 10 ? "0" + hours : hours) + ":" +
                         (minutes < 10 ? "0" + minutes : minutes) + ":" +
                         (seconds < 10 ? "0" + seconds : seconds);
 
-                    if (distance < 300000) { // 5 minutes warning
-                        timerElement.classList.replace("text-emerald-600", "text-red-500");
-                        timerElement.classList.add("animate-pulse");
-                    }
+                    timerElements.forEach(el => {
+                        el.innerHTML = timeString;
+                        if (distance < 300000) { // 5 minutes warning
+                            el.classList.remove("text-emerald-600", "text-slate-800", "dark:text-white");
+                            el.classList.add("text-red-500", "animate-pulse");
+                        }
+                    });
                 }
                 setInterval(updateTimer, 1000);
 
@@ -448,6 +463,25 @@
                 scrollbar-width: none;
                 /* Firefox */
             }
+
+            /* Strict Copy Prevention */
+            body,
+            .select-none {
+                -webkit-user-select: none;
+                /* Safari */
+                -ms-user-select: none;
+                /* IE 10 and IE 11 */
+                user-select: none;
+                /* Standard syntax */
+            }
         </style>
+        <script>
+            // Strict Event Blocking for Copy/Cut/Paste
+            ['cut', 'copy', 'paste'].forEach(event => {
+                document.addEventListener(event, e => {
+                    e.preventDefault();
+                });
+            });
+        </script>
     @endpush
 @endsection
