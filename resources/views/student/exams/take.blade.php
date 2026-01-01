@@ -394,6 +394,16 @@
                     }
                 });
 
+                // 3. BLUR DETECTION (Strict Overlay Prevention)
+                // Deteksi jika user klik aplikasi lain/overlay/notifikasi
+                window.addEventListener('blur', () => {
+                    if (!isExamStarted) return;
+
+                    // Allow small buffer if needed, but for 'Strict' we terminate immediately
+                    // This catches Overlay interactions
+                    terminateExam('focus_lost_overlay');
+                });
+
                 function terminateExam(reason) {
                     if (isTerminated) return;
                     isTerminated = true;

@@ -1,18 +1,18 @@
-# 🎓 SMAN 2 KAUR - Sistem Informasi Sekolah
+# 🎓 MAN Bengkulu Selatan - E-Learning & Sistem Informasi
 
 <p align="center">
-  <img src="public/images/logo.webp" alt="Logo SMAN 2 KAUR" width="120">
+  <img src="public/images/logo.png" alt="Logo MAN Bengkulu Selatan" width="120">
 </p>
 
 <p align="center">
-  <strong>Website Sistem Informasi Sekolah Modern dengan AI Chatbot Terintegrasi</strong>
+  <strong>Platform E-Learning Modern & Sistem Informasi Sekolah Terintegrasi AI</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel" alt="Laravel">
   <img src="https://img.shields.io/badge/Tailwind%20CSS-4.x-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/Alpine.js-3.x-8BC0D0?style=flat-square&logo=alpine.js" alt="Alpine.js">
-  <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php" alt="PHP">
+  <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" alt="Status">
 </p>
 
 ---
@@ -21,89 +21,49 @@
 
 - [Tentang Project](#-tentang-project)
 - [Fitur Unggulan](#-fitur-unggulan)
+- [Modul Ujian (CBT)](#-modul-ujian-cbt--anti-cheat)
 - [Tech Stack](#-tech-stack)
-- [Persyaratan Sistem](#-persyaratan-sistem)
 - [Instalasi](#-instalasi)
-- [Konfigurasi](#-konfigurasi)
-- [Struktur Project](#-struktur-project)
 - [Panduan Penggunaan](#-panduan-penggunaan)
-- [API Endpoints](#-api-endpoints)
-- [Screenshot](#-screenshot)
 - [Kontribusi](#-kontribusi)
-- [Lisensi](#-lisensi)
 
 ---
 
 ## 🎯 Tentang Project
 
-**SMAN 2 KAUR** adalah sistem informasi sekolah berbasis web yang dirancang untuk memudahkan pengelolaan dan penyebaran informasi di lingkungan sekolah. Website ini dilengkapi dengan **AI Chatbot (BINU)** yang dapat menjawab pertanyaan pengunjung secara real-time menggunakan teknologi DeepSeek AI.
+**MAN Bengkulu Selatan E-Learning** adalah solusi digital komprehensif yang menggabungkan sistem manajemen pembelajaran (LMS), ujian online berbasis komputer (CBT), dan portal informasi sekolah.
 
-### Tujuan Utama:
-- Menyediakan informasi sekolah yang akurat dan mudah diakses
-- Memfasilitasi komunikasi antara sekolah, siswa, dan orang tua
-- Mengotomatisasi proses administrasi sekolah
-- Memberikan layanan informasi 24/7 melalui AI Chatbot
+Dirancang dengan antarmuka **Glassmorphism** modern bernuansa Emerald/Green yang elegan, sistem ini tidak hanya fungsional tetapi juga memberikan pengalaman pengguna yang premium. Dilengkapi dengan **AI Chatbot (BINU)** untuk layanan informasi 24/7.
 
 ---
 
 ## ✨ Fitur Unggulan
 
-### 🌐 Website Publik
+### 🛡️ Modul Ujian (CBT) & Anti-Cheat
+Sistem ujian online canggih dengan proteksi keamanan berlapis untuk menjamin integritas ujian.
+- **Strict Fullscreen Mode**: Mewajibkan mode layar penuh selama ujian.
+- **Focus Detection**: Mendeteksi jika siswa berpindah tab, membuka aplikasi lain, atau mengklik notifikasi (Overlay Detection).
+- **Auto-Termination**: Ujian otomatis dihentikan jika terdeteksi kecurangan (keluar fullscreen/pindah tab).
+- **Real-time Monitoring**: Guru dapat memantau status siswa (Online/Offline/Violation) secara real-time.
+- **Automatic Grading**: Penilaian otomatis untuk soal pilihan ganda.
 
-| Fitur | Deskripsi |
-|-------|-----------|
-| **🏠 Beranda Dinamis** | Hero slider dengan berita terbaru, statistik sekolah, dan quick links |
-| **📰 Berita & Pengumuman** | Sistem manajemen konten untuk berita sekolah dengan kategori dan pencarian |
-| **🖼️ Galeri Multimedia** | Galeri foto dan video kegiatan sekolah dengan lightbox viewer |
-| **👨‍🏫 Profil Guru & Staff** | Direktori lengkap guru dan staff dengan foto dan informasi jabatan |
-| **📅 Kalender Akademik** | Kalender interaktif menampilkan jadwal kegiatan dan hari libur |
-| **📞 Halaman Kontak** | Form kontak dengan validasi dan peta lokasi |
-| **🔍 Visi & Misi** | Halaman informasi visi, misi, dan tujuan sekolah |
+### 🏫 Manajemen Kelas & Akademik
+- **Kelas Virtual**: Ruang belajar digital untuk materi dan diskusi.
+- **Manajemen Tugas**: Distribusi dan pengumpulan tugas terpusat.
+- **Absensi Digital**: Rekapitulasi kehadiran siswa yang mudah.
+- **Bank Soal**: Manajemen bank soal yang dapat digunakan kembali.
 
 ### 🤖 AI Chatbot (BINU)
+Asisten virtual cerdas yang siap membantu siswa dan pengunjung website.
+- Terintegrasi dengan **DeepSeek AI**.
+- Menjawab pertanyaan seputar sekolah, jadwal, dan PPDB.
+- Respons cepat dan natural dalam Bahasa Indonesia.
 
-**BINU** (Buddy Informatif untuk Navigasi Umum) adalah asisten virtual berbasis AI yang terintegrasi di seluruh halaman website.
-
-| Kemampuan | Deskripsi |
-|-----------|-----------|
-| **💬 Percakapan Natural** | Menjawab pertanyaan dalam Bahasa Indonesia dengan gaya ramah |
-| **📚 Knowledge Base** | Informasi sekolah seperti jadwal, kontak, pendaftaran PPDB |
-| **🔄 Session Persistence** | Menyimpan riwayat percakapan untuk konteks yang lebih baik |
-| **⚡ Real-time Response** | Respons cepat menggunakan DeepSeek API |
-| **📱 Mobile Friendly** | UI responsif dengan floating button di pojok kanan bawah |
-
-### 👨‍💼 Panel Admin
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| **📊 Dashboard** | Overview statistik website dan aktivitas terbaru |
-| **📝 Manajemen Berita** | CRUD berita dengan editor teks dan upload gambar |
-| **🖼️ Manajemen Galeri** | Upload dan organisasi foto/video kegiatan |
-| **👤 Manajemen User** | Pengelolaan akun admin, guru, dan siswa |
-| **🏫 Profil Sekolah** | Edit informasi sekolah (visi, misi, fasilitas) |
-| **📅 Kalender Event** | Manajemen event dan kegiatan sekolah |
-| **🎯 Banner Management** | Pengaturan banner pengumuman di halaman utama |
-| **📬 Manajemen Kontak** | Melihat dan merespons pesan dari form kontak |
-
-### 👨‍🏫 Dashboard Guru
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| **🏫 Kelas Saya** | Daftar kelas yang diampu dengan jumlah siswa |
-| **📋 Absensi** | Input dan rekap absensi siswa per pertemuan |
-| **📚 Materi Pembelajaran** | Upload dan share materi ajar (PDF, dokumen) |
-| **📝 Tugas** | Buat dan kelola tugas dengan deadline |
-| **📊 Laporan** | Generate laporan absensi dan nilai dalam PDF |
-| **📅 Jadwal Mengajar** | Lihat jadwal mengajar mingguan |
-
-### 👨‍🎓 Dashboard Siswa
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| **📅 Jadwal Pelajaran** | Lihat jadwal pelajaran mingguan |
-| **📚 Materi** | Akses materi pembelajaran dari guru |
-| **📝 Tugas** | Lihat dan kumpulkan tugas |
-| **📊 Nilai** | Lihat nilai tugas dan ujian |
+### 🌐 Portal Informasi Publik
+- Berita & Pengumuman Sekolah.
+- Galeri Kegiatan (Foto/Video).
+- Profil Guru & Tenaga Kependidikan.
+- Kalender Akademik Interaktif.
 
 ---
 
@@ -111,347 +71,107 @@
 
 ### Backend
 - **Framework**: Laravel 12.x
-- **PHP**: 8.2+
-- **Database**: SQLite (default) / MySQL / PostgreSQL
-- **Authentication**: Laravel Fortify
-- **PDF Generation**: DomPDF
+- **Language**: PHP 8.2+
+- **Database**: SQLite (Development) / MySQL (Production)
+- **Features**: Queues, Jobs, Cache, Eloquent ORM
 
 ### Frontend
-- **CSS Framework**: Tailwind CSS 4.x
-- **JavaScript**: Alpine.js 3.x
-- **Build Tool**: Vite 7.x
-- **Icons**: Heroicons (SVG inline)
+- **Framework**: Tailwind CSS 4.x (Utility-first CSS)
+- **Design System**: Emerald Glassmorphism Theme
+- **Interactivity**: Alpine.js 3.x
+- **Icons**: Heroicons & Lucide
 
-### AI Integration
-- **Chatbot Engine**: DeepSeek AI API
-- **Model**: deepseek-chat
-
-### Optimizations
-- **Image Format**: WebP dengan fallback PNG
-- **Caching**: Browser caching 1 tahun untuk static assets
-- **Compression**: GZIP untuk CSS/JS
-- **Lazy Loading**: Images dan content below-fold
-
----
-
-## 💻 Persyaratan Sistem
-
-| Komponen | Minimum | Recommended |
-|----------|---------|-------------|
-| PHP | 8.2 | 8.3+ |
-| Composer | 2.x | Latest |
-| Node.js | 18.x | 20.x LTS |
-| npm | 9.x | 10.x |
-| RAM | 512MB | 2GB+ |
-
-### PHP Extensions Required:
-- BCMath, Ctype, Fileinfo, JSON
-- Mbstring, OpenSSL, PDO, Tokenizer
-- XML, GD (untuk image processing)
+### Security & Optimization
+- **Protection**: CSRF Protection, XSS Sanitization, Rate Limiting
+- **Anti-Cheat**: JavaScript Page Visibility API & Fullscreen API
+- **Assets**: Vite Bundling, WebP Image Optimization
 
 ---
 
 ## 🚀 Instalasi
 
-### 1. Clone Repository
+Ikuti langkah berikut untuk menjalankan project di lingkungan lokal Anda.
 
-```bash
-git clone https://github.com/yourusername/website-sekolah-sma.git
-cd website-sekolah-sma
-```
+### Prasyarat
+- PHP 8.2 atau lebih baru
+- Composer
+- Node.js & NPM
 
-### 2. Quick Setup (Recommended)
+### Langkah-langkah
 
-```bash
-composer setup
-```
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/username/man-bengkulu-selatan-elearning.git
+   cd man-bengkulu-selatan-elearning
+   ```
 
-Perintah ini akan otomatis:
-- Install PHP dependencies
-- Copy `.env.example` ke `.env`
-- Generate application key
-- Jalankan migrasi database
-- Install npm dependencies
-- Build assets production
+2. **Install Depedencies**
+   ```bash
+   # Backend
+   composer install
+   
+   # Frontend
+   npm install
+   ```
 
-### 3. Manual Setup
+3. **Konfigurasi Environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Edit file `.env` dan sesuaikan konfigurasi database Anda.*
 
-```bash
-# Install PHP dependencies
-composer install
+4. **Setup Database**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-# Copy environment file
-cp .env.example .env
+5. **Jalankan Aplikasi**
+   ```bash
+   # Terminal 1: Laravel Server
+   php artisan serve
 
-# Generate application key
-php artisan key:generate
+   # Terminal 2: Vite Development
+   npm run dev
+   ```
 
-# Jalankan migrasi dan seeder
-php artisan migrate --seed
-
-# Install npm dependencies
-npm install
-
-# Build assets untuk production
-npm run build
-
-# Atau untuk development
-npm run dev
-```
-
-### 4. Jalankan Server Development
-
-```bash
-# Cara mudah (server + queue + logs + vite sekaligus)
-composer dev
-
-# Atau manual
-php artisan serve
-```
-
-Akses website di: `http://localhost:8000`
-
----
-
-## ⚙️ Konfigurasi
-
-### Environment Variables (.env)
-
-```env
-# Application
-APP_NAME="SMAN 2 KAUR"
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-# Database (SQLite default)
-DB_CONNECTION=sqlite
-# DB_DATABASE=/absolute/path/to/database.sqlite
-
-# Untuk MySQL
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=sman2kaur
-# DB_USERNAME=root
-# DB_PASSWORD=
-
-# DeepSeek AI API (untuk Chatbot)
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-
-# Mail Configuration
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-```
-
-### Konfigurasi Chatbot
-
-API Key DeepSeek dapat diperoleh dari [platform.deepseek.com](https://platform.deepseek.com). 
-Tambahkan ke `.env`:
-
-```env
-DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
-```
-
----
-
-## 📁 Struktur Project
-
-```
-website-sekolah-sma/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Admin/          # Controllers untuk panel admin
-│   │   │   ├── Teacher/        # Controllers untuk dashboard guru
-│   │   │   ├── Student/        # Controllers untuk dashboard siswa
-│   │   │   ├── ChatbotController.php
-│   │   │   └── HomeController.php
-│   │   └── Middleware/
-│   │       ├── AdminMiddleware.php
-│   │       ├── RoleMiddleware.php
-│   │       └── CacheControlMiddleware.php
-│   ├── Models/
-│   │   ├── User.php
-│   │   ├── News.php
-│   │   ├── Gallery.php
-│   │   ├── Teacher.php
-│   │   ├── Student.php
-│   │   ├── Classroom.php
-│   │   ├── ChatSession.php
-│   │   └── ... (21 models)
-│   └── Services/
-│       ├── DeepSeekService.php     # AI Chatbot integration
-│       └── ImageOptimizationService.php
-├── database/
-│   ├── migrations/
-│   └── seeders/
-├── public/
-│   ├── images/
-│   │   ├── logo.webp
-│   │   └── icon-chatbot.webp
-│   └── build/                  # Compiled assets
-├── resources/
-│   ├── css/
-│   │   └── app.css            # Tailwind CSS
-│   ├── js/
-│   │   └── app.js             # Alpine.js
-│   └── views/
-│       ├── layouts/
-│       ├── pages/              # Public pages
-│       ├── admin/              # Admin panel views
-│       ├── teacher/            # Teacher dashboard views
-│       └── partials/           # Reusable components
-├── routes/
-│   └── web.php
-├── storage/
-│   └── app/public/            # User uploads
-├── .env.example
-├── composer.json
-├── package.json
-├── tailwind.config.js
-└── vite.config.js
-```
+   Akses aplikasi di: `http://localhost:8000`
 
 ---
 
 ## 📖 Panduan Penggunaan
 
-### Akun Default (Setelah Seeding)
+### Login Credentials (Default Seeder)
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@sman2kaur.sch.id | password |
-| Guru | guru@sman2kaur.sch.id | password |
-| Siswa | siswa@sman2kaur.sch.id | password |
+| **Admin** | admin@manbs.sch.id | password |
+| **Guru** | guru@manbs.sch.id | password |
+| **Siswa** | siswa@manbs.sch.id | password |
 
-### Alur Penggunaan
+### Alur Ujian (Untuk Siswa)
+1. Login ke dashboard siswa.
+2. Masuk ke menu **Ujian Sekolah**.
+3. Pilih ujian yang aktif.
+4. Klik **Mulai Kerjakan** (Wajib Fullscreen).
+5. Kerjakan soal tanpa meninggalkan halaman ujian.
+6. Klik **Selesaikan Ujian** untuk mengirim jawaban.
 
-#### 1. Pengunjung (Guest)
-```
-🌐 Homepage → 📰 Baca Berita → 🖼️ Lihat Galeri → 💬 Chat dengan BINU
-                                                   ↓
-                                        🤖 Tanya informasi sekolah
-```
-
-#### 2. Admin
-```
-🔐 Login → 📊 Dashboard → Pilih Menu:
-                          ├── 📝 Kelola Berita
-                          ├── 🖼️ Kelola Galeri
-                          ├── 👤 Kelola User
-                          ├── 🏫 Edit Profil Sekolah
-                          └── 📅 Kelola Kalender
-```
-
-#### 3. Guru
-```
-🔐 Login → 📊 Dashboard → Pilih Menu:
-                          ├── 🏫 Lihat Kelas
-                          ├── ✅ Input Absensi
-                          ├── 📚 Upload Materi
-                          ├── 📝 Buat Tugas
-                          └── 📊 Generate Laporan
-```
-
-#### 4. Siswa
-```
-🔐 Login → 📊 Dashboard → Pilih Menu:
-                          ├── 📅 Lihat Jadwal
-                          ├── 📚 Download Materi
-                          ├── 📝 Kerjakan Tugas
-                          └── 📊 Lihat Nilai
-```
+### Alur Pembuatan Ujian (Untuk Guru)
+1. Login ke dashboard guru.
+2. Masuk ke menu **Kelola Ujian**.
+3. Klik **Buat Ujian Baru**, isi detail (Waktu, Judul).
+4. Tambahkan soal-soal dan kunci jawaban.
+5. Gunakan tombol **Monitor** saat ujian berlangsung untuk melihat aktivitas siswa realtime.
 
 ---
 
-## 🔌 API Endpoints
+## 👨‍💻 Pengembang
 
-### Chatbot API
-
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| POST | `/chatbot/session` | Membuat/mendapatkan session chat |
-| POST | `/chatbot/send` | Mengirim pesan ke chatbot |
-| POST | `/chatbot/clear` | Menghapus history chat |
-
-### Contoh Request
-
-```javascript
-// Mengirim pesan
-fetch('/chatbot/send', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken
-    },
-    body: JSON.stringify({
-        session_id: 'uuid-session-id',
-        message: 'Kapan jadwal masuk sekolah?'
-    })
-});
-```
+Dikembangkan dengan dedikasi untuk **MAN Bengkulu Selatan**.
 
 ---
-
-## 📸 Screenshot
-
-### Homepage
-![Homepage](docs/screenshots/homepage.png)
-
-### AI Chatbot BINU
-![Chatbot](docs/screenshots/chatbot.png)
-
-### Admin Dashboard
-![Admin Dashboard](docs/screenshots/admin-dashboard.png)
-
-### Teacher Dashboard
-![Teacher Dashboard](docs/screenshots/teacher-dashboard.png)
-
----
-
-## 🤝 Kontribusi
-
-Kontribusi sangat diterima! Silakan buat Pull Request atau buka Issue untuk:
-
-1. 🐛 Bug reports
-2. 💡 Feature requests
-3. 📝 Documentation improvements
-4. 🎨 UI/UX enhancements
-
-### Development Workflow
-
-```bash
-# 1. Fork repository
-# 2. Clone fork Anda
-git clone https://github.com/YOUR_USERNAME/website-sekolah-sma.git
-
-# 3. Buat branch baru
-git checkout -b feature/nama-fitur
-
-# 4. Lakukan perubahan dan commit
-git commit -m "feat: menambahkan fitur baru"
-
-# 5. Push dan buat Pull Request
-git push origin feature/nama-fitur
-```
-
----
-
-## 📄 Lisensi
-
-Project ini dilisensikan di bawah [MIT License](LICENSE).
-
----
-
-## 👨‍💻 Developer
 
 <p align="center">
-  <strong>Developed with ❤️ for SMAN 2 KAUR</strong>
+  <em>© 2024 - 2025 MAN Bengkulu Selatan. All Rights Reserved.</em>
 </p>
-
-<p align="center">
-  <em>© 2024 SMAN 2 KAUR. All Rights Reserved.</em>
-</p>
-# e-learning-man-bs
