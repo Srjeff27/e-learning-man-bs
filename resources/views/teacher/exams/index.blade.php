@@ -132,15 +132,22 @@
                                         @endif
 
                                         {{-- Hapus --}}
-                                        <form action="{{ route('teacher.exams.destroy', $exam) }}" method="POST"
-                                            onsubmit="return confirm('Hapus ujian ini? Data nilai akan hilang permanen.');" class="ml-2">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="p-2 bg-white text-slate-400 hover:bg-red-50 hover:text-red-500 rounded-xl border border-slate-200 hover:border-red-200 transition-all shadow-sm tooltip" title="Hapus Ujian">
+                                        @if($exam->attempts()->exists())
+                                            <button type="button" disabled
+                                                class="ml-2 p-2 bg-slate-100 text-slate-300 rounded-xl border border-slate-200 cursor-not-allowed tooltip" title="Tidak dapat dihapus karena sudah ada data hasil">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                                             </button>
-                                        </form>
+                                        @else
+                                            <form action="{{ route('teacher.exams.destroy', $exam) }}" method="POST"
+                                                onsubmit="return confirm('Hapus ujian ini? Data nilai akan hilang permanen.');" class="ml-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="p-2 bg-white text-slate-400 hover:bg-red-50 hover:text-red-500 rounded-xl border border-slate-200 hover:border-red-200 transition-all shadow-sm tooltip" title="Hapus Ujian">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

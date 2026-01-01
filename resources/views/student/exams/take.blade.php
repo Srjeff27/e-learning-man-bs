@@ -139,13 +139,15 @@
     <!-- Security Overlay (Dynamic Content) -->
     <div id="security-overlay"
         class="fixed inset-0 bg-slate-900/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center text-center p-8 transition-all duration-300">
-        
+
         <!-- State 1: Start/Rules -->
         <div id="state-start" class="max-w-xl">
-            <div class="bg-emerald-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-pulse">
+            <div
+                class="bg-emerald-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-pulse">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-emerald-500">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
             </div>
             <h2 class="text-3xl font-black text-white mb-4">ATURAN UJIAN</h2>
@@ -160,11 +162,13 @@
                 </p>
                 <p class="text-slate-300 flex items-start gap-3">
                     <span class="text-emerald-500 font-bold">3.</span>
-                    Jika keluar fullscreen (tidak sengaja), Anda punya waktu <span class="text-emerald-400 font-bold">5 detik</span> untuk kembali.
+                    Jika keluar fullscreen (tidak sengaja), Anda punya waktu <span class="text-emerald-400 font-bold">5
+                        detik</span> untuk kembali.
                 </p>
                 <p class="text-slate-300 flex items-start gap-3">
                     <span class="text-red-500 font-bold">4.</span>
-                    Membuka tab lain akan dianggap kecurangan dan ujian <span class="text-red-400 font-bold">langsung dihentikan</span>.
+                    Membuka tab lain akan dianggap kecurangan dan ujian <span class="text-red-400 font-bold">langsung
+                        dihentikan</span>.
                 </p>
             </div>
             <button onclick="startExam()"
@@ -175,19 +179,21 @@
 
         <!-- State 2: Violation Warning (Countdown) -->
         <div id="state-warning" class="hidden max-w-lg">
-            <div class="bg-red-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-bounce">
+            <div
+                class="bg-red-500/10 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center animate-bounce">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                    <line x1="12" y1="9" x2="12" y2="13"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-red-500">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
             </div>
             <h2 class="text-3xl font-black text-white mb-2">PERINGATAN!</h2>
             <p class="text-slate-300 mb-6 text-lg">Anda keluar dari mode fullscreen. Kembali dalam:</p>
-            
+
             <div class="text-6xl font-black text-red-500 mb-8 font-mono" id="countdown-display">5</div>
-            
+
             <button onclick="enableFullscreen()"
                 class="px-8 py-4 bg-white text-slate-900 rounded-xl font-bold hover:bg-slate-100 transition-colors shadow-lg">
                 Kembali ke Ujian
@@ -198,14 +204,16 @@
         <div id="state-terminated" class="hidden max-w-lg">
             <div class="bg-red-600/20 p-6 rounded-full mb-6 mx-auto w-24 h-24 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="15" y1="9" x2="9" y2="15"/>
-                    <line x1="9" y1="9" x2="15" y2="15"/>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-red-600">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
                 </svg>
             </div>
             <h2 class="text-3xl font-black text-white mb-4">UJIAN DIHENTIKAN</h2>
-            <p class="text-slate-300 mb-8">Terdeteksi aktivitas mencurigakan (pindah tab/minimize). Sistem telah otomatis menghentikan ujian Anda.</p>
+            <p class="text-slate-300 mb-8">Terdeteksi aktivitas mencurigakan (pindah tab/minimize). Sistem telah otomatis
+                menghentikan ujian Anda.</p>
             <a href="{{ route('student.exams.index') }}"
                 class="px-8 py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-600/30">
                 Kembali ke Dashboard
@@ -276,24 +284,24 @@
                 const stateWarning = document.getElementById('state-warning');
                 const stateTerminated = document.getElementById('state-terminated');
                 const countdownDisplay = document.getElementById('countdown-display');
-                
+
                 let isExamStarted = false;
                 let countdownInterval = null;
                 let countdownTime = 5;
                 let isTerminated = false;
 
                 // Assign to global window object
-                window.startExam = function() {
+                window.startExam = function () {
                     window.enableFullscreen();
                     isExamStarted = true;
-                    if(stateStart) stateStart.classList.add('hidden');
-                    
+                    if (stateStart) stateStart.classList.add('hidden');
+
                     // Allow a small delay for fullscreen to engage before checking
                     setTimeout(() => {
                         // We check if fullscreen is active. 
                         // If strict browser policy blocked it, we give another prompt or show warning
                         if (document.fullscreenElement) {
-                            if(overlay) overlay.classList.add('hidden');
+                            if (overlay) overlay.classList.add('hidden');
                         } else {
                             // Fullscreen failed or user denied
                             // Force strict check: if not fullscreen, show warning immediately
@@ -302,7 +310,7 @@
                     }, 800);
                 }
 
-                window.enableFullscreen = function() {
+                window.enableFullscreen = function () {
                     const elem = document.documentElement;
                     if (elem.requestFullscreen) {
                         elem.requestFullscreen().catch(err => {
@@ -317,30 +325,49 @@
 
                 // 1. FULLSCREEN DETECTION
                 document.addEventListener('fullscreenchange', () => {
-                    if (!isExamStarted) return; 
+                    if (!isExamStarted) return;
 
                     if (!document.fullscreenElement) {
-                        showWarning();
+                        // On mobile, switching tabs might exit fullscreen first.
+                        // Check if we are also hidden immediately.
+                        if (document.hidden || document.visibilityState === 'hidden') {
+                            terminateExam('tab_switch_mobile');
+                        } else {
+                            showWarning();
+                        }
                     } else {
                         hideWarning();
                     }
                 });
 
                 function showWarning() {
-                    if(overlay) overlay.classList.remove('hidden');
-                    if(stateStart) stateStart.classList.add('hidden');
-                    if(stateWarning) stateWarning.classList.remove('hidden');
-                    
+                    // Double check visibility before showing warning
+                    if (document.hidden || document.visibilityState === 'hidden') {
+                        terminateExam('tab_switch_during_warning');
+                        return;
+                    }
+
+                    if (overlay) overlay.classList.remove('hidden');
+                    if (stateStart) stateStart.classList.add('hidden');
+                    if (stateWarning) stateWarning.classList.remove('hidden');
+
                     // Reset Countdown
                     countdownTime = 5;
-                    if(countdownDisplay) countdownDisplay.textContent = countdownTime;
-                    
+                    if (countdownDisplay) countdownDisplay.textContent = countdownTime;
+
                     if (countdownInterval) clearInterval(countdownInterval);
-                    
+
                     countdownInterval = setInterval(() => {
                         countdownTime--;
-                        if(countdownDisplay) countdownDisplay.textContent = countdownTime;
-                        
+                        if (countdownDisplay) countdownDisplay.textContent = countdownTime;
+
+                        // Strict check during countdown too
+                        if (document.hidden || document.visibilityState === 'hidden') {
+                            clearInterval(countdownInterval);
+                            terminateExam('tab_switch_during_countdown');
+                            return;
+                        }
+
                         if (countdownTime <= 0) {
                             clearInterval(countdownInterval);
                             terminateExam('fullscreen_timeout');
@@ -350,14 +377,14 @@
 
                 function hideWarning() {
                     if (countdownInterval) clearInterval(countdownInterval);
-                    if(overlay) overlay.classList.add('hidden');
-                    if(stateWarning) stateWarning.classList.add('hidden');
+                    if (overlay) overlay.classList.add('hidden');
+                    if (stateWarning) stateWarning.classList.add('hidden');
                 }
 
                 // 2. TAB SWITCHING (Strict)
                 document.addEventListener('visibilitychange', () => {
                     if (!isExamStarted) return;
-                    if (document.hidden) {
+                    if (document.hidden || document.visibilityState === 'hidden') {
                         terminateExam('tab_switch');
                     }
                 });
@@ -365,13 +392,13 @@
                 function terminateExam(reason) {
                     if (isTerminated) return;
                     isTerminated = true;
-                    
+
                     if (countdownInterval) clearInterval(countdownInterval);
 
-                    if(overlay) overlay.classList.remove('hidden');
-                    if(stateStart) stateStart.classList.add('hidden');
-                    if(stateWarning) stateWarning.classList.add('hidden');
-                    if(stateTerminated) stateTerminated.classList.remove('hidden');
+                    if (overlay) overlay.classList.remove('hidden');
+                    if (stateStart) stateStart.classList.add('hidden');
+                    if (stateWarning) stateWarning.classList.add('hidden');
+                    if (stateTerminated) stateTerminated.classList.remove('hidden');
 
                     fetch('{{ route("student.exams.record-violation", $exam) }}', {
                         method: 'POST',

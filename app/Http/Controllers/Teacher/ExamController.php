@@ -90,6 +90,10 @@ class ExamController extends Controller
 
     public function destroy(Exam $exam)
     {
+        if ($exam->attempts()->exists()) {
+            return redirect()->back()->with('error', 'Ujian tidak dapat dihapus karena sudah ada siswa yang mengerjakannya.');
+        }
+
         $exam->delete();
         return redirect()->route('teacher.exams.index')->with('success', 'Ujian dihapus.');
     }
